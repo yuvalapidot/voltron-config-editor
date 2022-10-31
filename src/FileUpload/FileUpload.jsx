@@ -6,6 +6,7 @@ import "./FileUpload.scss";
 const FileUpload = ({ file, setFile }) => {
   const uploadHandler = (event) => {
     const uploadedFile = event.target.files[0];
+  };
 
   return (
     <>
