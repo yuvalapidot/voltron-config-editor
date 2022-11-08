@@ -3,9 +3,32 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 
-const FileUpload = ({ file, setFile }) => {
-  const uploadHandler = async (event) => {
-    fetch("/test").then((res) => res.json().then((res) => console.log(res)));
+const FileUpload = () => {
+  const uploadHandler = async (e) => {
+    // get the file from the event
+    const file = e.target.files[0];
+
+    if (file != null) {
+      // wrap the uploaded file with formdata object we can send via post request
+      const data = new FormData();
+      data.append("file_from_react", file);
+
+      // send the formdata with fetch
+      let response = await fetch("/", {
+        method: "post",
+        body: data,
+      });
+
+      // wait for response and make a json out of it
+      let res = await response.json();
+
+      // validate the response
+      if (res.status !== 1) {
+        alert("Error uploading file");
+      } else {
+        console.log("ack");
+      }
+    }
   };
 
   return (
