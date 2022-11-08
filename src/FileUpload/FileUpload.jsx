@@ -4,8 +4,8 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 
 const FileUpload = ({ file, setFile }) => {
-  const uploadHandler = (event) => {
-    const uploadedFile = event.target.files[0];
+  const uploadHandler = async (event) => {
+    fetch("/test").then((res) => res.json().then((res) => console.log(res)));
   };
 
   return (
