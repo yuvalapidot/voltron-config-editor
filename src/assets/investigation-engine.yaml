@@ -1,0 +1,428 @@
+name: Investigation
+
+common:
+  udi:
+    class: cp4s.udi.udi_helper.UDIHelper
+    parameters:
+      auth: "{{AUTH}}"
+
+  reinvestigation_api:
+    class: cp4s.reinvestigation.reinvestigation_api.ReinvestigationApi
+    parameters:
+      auth: "{{AUTH}}"
+      endpoint: "{{REINVESTIGATION_ENDPOINT}}"
+
+  minio_client:
+    class: storage.minio_client.MinioClient
+    enable: "{{ENABLE_MINIO}}"
+    parameters:
+        host: "{{MINIO_HOST}}"
+        auth: "{{AUTH}}"
+        bucket: "{{MINIO_BUCKET}}"
+        secure: "{{MINIO_SECURE}}"
+
+  responders: # todo: i don't see a better way to inject the common parameters
+    - class: response.responders.block_account.BlockingAccount
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_domain.DomainBlocker
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_hash.HashBlocker
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_icmp.BlockICMP
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_ip.IPBlocker
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_unauthorized_scanners.BlockUnauthorizedScanners
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.block_url.URLBlocker
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.close_unnecessary_ports.CloseUnnecessaryPorts
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.disable_rdp.RDPDisable
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.disable_smb.DisableSMB
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.isolate_user_activity.IsolatedUserActivity
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.quarantine_system.QuarantineSystem
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.recover_account.RecoverAccount
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+    - class: response.responders.scan_system.ScanSystems
+      parameters:
+        include_case_findings: "{{INCLUDE_CASE_FINDINGS_IN_RESPONSES}}"
+        eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
+        max_events: "{{MAX_RESPONSE_EVENTS}}"
+
+state:
+  class: graph.forensic_graph.ForensicGraph
+  parameters:
+    default_context:
+    - status
+    - results
+    - walk_through
+    events_manager:
+      class: graph.events_manager.EventsManager
+      parameters:
+        default_batch_size: "{{MAX_BATCH_SIZE}}"
+        max_events_in_memory: "{{MAX_EVENTS_IN_MEMORY}}"
+        max_events_per_node: "{{MAX_EVENTS_PER_NODE}}"
+
+pipeline:
+
+  - name: Initialization
+    type: linear
+    phases:
+      - name: Ingestion
+        type: blocking
+        producers:
+          - class: step_producer.reinvestigation.ReinvestigationStepProducer
+            name: Reinvestigation
+            enable: "{{ENABLE_REINVESTIGATION_PRODUCER}}"
+            parameters:
+              reinvestigation_api: "{{reinvestigation_api}}"
+              state_pickle: "{{STATE_PICKLE_FILE}}"
+              input_key: "{{INPUT_STATE_KEY}}"
+              exclude_keys: "{{STATE_EXCLUDE_KEYS}}"
+          - class: step_producer.investigation_input.InvestigationInputStepProducer
+            name: Investigation Input
+            enable: "{{ENABLE_INGESTION_PRODUCER}}"
+            parameters:
+              input_findings: "{{FINDINGS}}"
+              input_observed_data: "{{OBSERVED_DATA}}"
+              input_pattern: "{{STIX_PATTERN}}"
+              udi: "{{udi}}"
+              window_start: "{{start_ts}}"
+              window_end: "{{stop_ts}}"
+              max_findings: "{{MAX_INPUT_FINDINGS}}"
+
+
+  - name: Expansion Loop
+    type: loop
+    phases:
+
+      - name: Investigation Timeout
+        type: watchdog
+        enable: "{{ENABLE_TIMEOUT_WATCHDOG}}"
+        producers:
+          - class: step_producer.wait_on_state.WaitTimeoutProducer
+            name: Wait for Investigation Timeout
+            parameters:
+              timeout: "{{MAX_EXPANSION_LOOP_TIME_SECONDS}}"
+              interval: 0.1
+          - class: step_producer.stop_investigation.StopInvestigationProducer
+            name: Stop Investigation
+            run_after:
+              - Wait for Stop Conditions
+
+      - name: Event Insertion
+        type: blocking
+        producers:
+          - class: step_producer.evidence_insertion.EventsBatchInsertionProducer
+            name: Event Batch Insertion
+            parameters:
+              batch: "{{EVENT_INSERTION_BATCH_SIZE}}"
+
+      - name: Event Enrichment
+        type: non_blocking
+        enable: "{{ENABLE_EVENT_ENRICHMENT_PHASE}}"
+        thread_count: 0
+        producers:
+          - class: step_producer.knowledge_base.KnowledgeBaseProducer
+            name: Knowledge Base
+            enable: "{{ENABLE_KNOWLEDGE_BASE_PRODUCER}}"
+            parameters:
+              kb:
+                class: symptom.symptom_knowledge_base.SymptomKnowledgeBase
+                parameters:
+                  drc:
+                    class: cp4s.drc.drc_api.DRCApi
+                    parameters:
+                      auth: "{{AUTH}}"
+              parallelism: "{{KB_PARALLEL}}"
+              batch: "{{KB_ENRICHMENT_BATCH}}"
+              confidence_conversion: "{{KB_CONFIDENCE_CONVERSION}}"
+
+      - name: Node Enrichment
+        type: blocking
+        enable: "{{ENABLE_NODE_ENRICHMENT_PHASE}}"
+        thread_count: 2
+        producers:
+          - class: step_producer.tis_enrichment.TISStepProducer
+            name: TIS Enrichment
+            enable: "{{ENABLE_TIS_ENRICHMENT_PRODUCER}}"
+            parameters:
+              tis:
+                class: cp4s.ti.tis.TISEnrichBatchApi
+                parameters:
+                  auth: "{{AUTH}}"
+              timeout_seconds: "{{TIS_BATCH_TIMEOUT_SECS}}"
+              suspicious_threshold: "{{TIS_SUSPICIOUS_THRESHOLD}}"
+              max_iocs: "{{TIS_BATCH_QUERY_MAX_IOC}}"
+              batch: "{{TIS_BATCH_QUERY_MAX_SIZE}}"
+
+          - class: step_producer.car_enrichment.CarEnrichmentProducer
+            name: CAR Enrichment Producer
+            enable: "{{ENABLE_CAR_ENRICHMENT_PRODUCER}}"
+            parameters:
+              car:
+                class: cp4s.car.car_api.CARApi
+                parameters:
+                  auth: "{{AUTH}}"
+
+      - name: Reasoning
+        type: blocking
+        producers:
+          - class: step_producer.edge_scoring.DynamicEdgeScoringProducer
+            name: Dynamic Edge Scoring
+            enable: "{{ENABLE_EDGE_SCORING_PRODUCER}}"
+
+          - class: step_producer.score_propagation.BeliefPropagationProducer
+            name: Belief Propagation
+            enable: "{{ENABLE_BELIEF_PROPAGATION_PRODUCER}}"
+            run_after:
+              - Dynamic Edge Scoring
+            parameters:
+              max_iterations: "{{MAX_BELIEF_PROPAGATION_ITERATIONS}}"
+              convergence_threshold: "{{BELIEF_PROPAGATION_CONVERGENCE_THRESHOLD}}"
+              iterative_vs_scheduled: "{{ITER_VS_SCHEDULED_BP}}"
+
+      - name: Analysis
+        type: watchdog
+        enable: "{{ENABLE_ANALYSIS_WATCHDOG}}"
+        thread_count: 8
+        producers:
+          - class: step_producer.wait_on_state.WaitReadyForAnalysisProducer
+            name: Wait For Analysis
+            parameters:
+              iterations: "{{RUN_ANALYSIS_ITERATIONS}}"
+              nodes_ratio: "{{RUN_ANALYSIS_NODES_RATIO}}"
+              events_ratio: "{{RUN_ANALYSIS_EVENTS_RATION}}"
+              timeout: "{{RUN_ANALYSIS_SECONDS}}"
+          - class: step_producer.classification.ClassificationProducer
+            name: Classification
+            enable: "{{ENABLE_ANALYSIS_CLASSIFICATION_PRODUCER}}"
+            run_after:
+              - Wait For Analysis
+            parameters:
+              strategy:
+                class: classification.strategy.ProvenanceTrackingStrategy
+          - class: step_producer.investigation_scoring.InvestigationScoringProducer
+            name: Investigation Scoring
+            enable: "{{ENABLE_ANALYSIS_INVESTIGATION_SCORING_PRODUCER}}"
+            run_after:
+              - Classification
+          - class: step_producer.response_suggestion.ResponseSuggestionProducer
+            name: Response Recommendation
+            enable: "{{ENABLE_ANALYSIS_RESPONSE_PRODUCER}}"
+            parameters:
+              udi: "{{udi}}"
+              responders: "{{responders}}"
+            run_after:
+              - Classification
+
+      - name: Graph Information
+        type: blocking
+        producers:
+          - class: step_producer.graph_info.GraphInformationProducer
+            name: Graph Information
+
+      - name: Write Results
+        type: non_blocking
+        thread_count: 3
+        enable: "{{ENABLE_WRITE_RESULTS_PHASE}}"
+        producers:
+          - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
+            name: Write Investigation Results
+            enable: "{{ENABLE_WRITE_INVESTIGATION_RESULTS_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              prefix: "results"
+              include_related_ti_events: "{{INCLUDE_RELATED_TI_EVENTS}}"
+              eliminate_dup_tis_event_symptoms: "{{ELIMINATE_DUPLICATE_SYMPTOMS}}"
+              include_case_findings: "{{INCLUDE_CASE_FINDINGS}}"
+              eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES}}"
+              max_events: "{{MAX_RESULT_EVENTS}}"
+              log: "{{LOG_INVESTIGATION_RESULTS}}"
+          - class: step_producer.write_investigation_results.ExportStatePickleProducer
+            name: Write State Pickle
+            enable: "{{ENABLE_WRITE_STATE_PICKLE_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              reinvestigation_api: "{{reinvestigation_api}}"
+              input_key: "{{INPUT_STATE_KEY}}"
+              log: "{{LOG_PICKLE}}"
+              minio: "{{minio_client}}"
+          - class: step_producer.write_investigation_results.ExportGraphGexfProducer
+            name: Write Graph Gexf
+            enable: "{{ENABLE_WRITE_GRAPH_GEXF_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              log: "{{LOG_GEXF}}"
+              minio: "{{minio_client}}"
+          - class: step_producer.write_investigation_results.ExportEngineStatistics
+            name: Write Engine Statistics
+            enable: "{{ENABLE_WRITE_STATISTICS_PRODUCER}}"
+            run_after:
+              - Write Investigation Results
+              - Write State Pickle
+              - Write Graph Gexf
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              log: "{{LOG_STATISTICS}}"
+
+      - name: Stop Investigation
+        type: blocking
+        producers:
+          - class: step_producer.stop_investigation.StopInvestigationProducer
+            name: Stop Investigation Conditions
+            parameters:
+              max_iterations: "{{MAX_ITERATIONS_NUM}}"
+              iteration_grace: "{{CONSEC_ITERS_NODES_BELOW_THRESHOLD_EXPANSION}}"
+              max_nodes: "{{MAX_GRAPH_SIZE_NODES}}"
+              max_events: "{{MAX_GRAPH_SIZE_EVENTS}}"
+
+      - name: Expansion
+        type: non_blocking
+        thread_count: 8
+        producers:
+          - class: step_producer.udi_expansion.UDIExpansionStepProducer
+            name: Udi Expansion
+            parameters:
+              window_start: "{{start_ts}}"
+              window_end: "{{stop_ts}}"
+              udi: "{{udi}}"
+              whitelist: "{{EXPANSION_WL}}"
+              expansion_threshold: "{{NODE_SCORE_THRESHOLD}}"
+              num_nodes_to_expand_initial: "{{NUM_NODES_TO_EXPAND_INITIAL}}"
+              above_threshold: "{{NUM_NODES_TO_EXPAND_ABOVE_THRESHOLD}}"
+              below_threshold: "{{NUM_NODES_TO_EXPAND_BELOW_THRESHOLD}}"
+              node_re_expansion_time_ratio: "{{NODE_RE_EXPAND_TIME_WINDOW_RATIO}}"
+
+      - name: Wait for Results
+        type: blocking
+        producers:
+          - class: step_producer.wait_on_state.WaitForEventsProducer
+            name: Wait for Events
+            parameters:
+              phase_to_wait: Expansion
+              min_events: "{{WAIT_UDI_MIN_EVENTS}}"
+              timeout: "{{WAIT_UDI_EVENTS_SECONDS}}"
+              interval: 0.1
+
+
+  - name: Completion
+    type: linear
+    phases:
+      - name: Completion Analysis
+        type: blocking
+        enable: "{{ENABLE_COMPLETION_ANALYSIS_PHASE}}"
+        thread_count: 8
+        producers:
+          - class: step_producer.classification.ClassificationProducer
+            name: Completion Classification
+            enable: "{{ENABLE_COMPLETION_CLASSIFICATION_PRODUCER}}"
+            parameters:
+              strategy:
+                class: classification.strategy.ProvenanceTrackingStrategy
+          - class: step_producer.investigation_scoring.InvestigationScoringProducer
+            name: Completion Investigation Scoring
+            enable: "{{ENABLE_COMPLETION_INVESTIGATION_SCORING_PRODUCER}}"
+            run_after:
+              - Completion Classification
+          - class: step_producer.response_suggestion.ResponseSuggestionProducer
+            name: Completion Response Recommendation
+            enable: "{{ENABLE_COMPLETION_RESPONSE_PRODUCER}}"
+            parameters:
+              udi: "{{udi}}"
+              responders: "{{responders}}"
+            run_after:
+              - Completion Classification
+
+      - name: Write Completed Results
+        type: blocking
+        enable: "{{ENABLE_WRITE_COMPLETED_RESULTS_PHASE}}"
+        thread_count: 4
+        producers:
+          - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
+            name: Write Final Investigation Results
+            enable: "{{ENABLE_WRITE_FINAL_INVESTIGATION_RESULTS_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              prefix: "results"
+              include_related_ti_events: "{{INCLUDE_RELATED_TI_EVENTS}}"
+              eliminate_dup_tis_event_symptoms: "{{ELIMINATE_DUPLICATE_SYMPTOMS}}"
+              include_case_findings: "{{INCLUDE_CASE_FINDINGS}}"
+              eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES}}"
+              max_events: "{{MAX_RESULT_EVENTS}}"
+              log: "{{LOG_INVESTIGATION_RESULTS}}"
+              minio: "{{minio_client}}"
+          - class: step_producer.write_investigation_results.ExportStatePickleProducer
+            name: Write Final State Pickle
+            enable: "{{ENABLE_WRITE_FINAL_STATE_PICKLE_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              prefix: "FINAL"
+              reinvestigation_api: "{{reinvestigation_api}}"
+              input_key: "{{INPUT_STATE_KEY}}"
+              log: "{{LOG_PICKLE}}"
+              minio: "{{minio_client}}"
+          - class: step_producer.write_investigation_results.ExportGraphGexfProducer
+            name: Write Final Graph Gexf
+            enable: "{{ENABLE_WRITE_FINAL_GRAPH_GEXF_PRODUCER}}"
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              prefix: "FINAL"
+              log: "{{LOG_GEXF}}"
+              minio: "{{minio_client}}"
+          - class: step_producer.write_investigation_results.ExportEngineStatistics
+            name: Write Final Engine Statistics
+            enable: "{{ENABLE_WRITE_FINAL_STATISTICS_PRODUCER}}"
+            run_after:
+              - Write Final Investigation Results
+              - Write Final State Pickle
+              - Write Final Graph Gexf
+            parameters:
+              out_dir: "{{OUT_DIR}}"
+              prefix: "FINAL_STATISTICS"
+              log: "{{LOG_STATISTICS}}"
+              minio: "{{minio_client}}"
