@@ -2,8 +2,11 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
+import { useNavigate } from "react-router-dom";
 
 const FileUpload = () => {
+  const navigate = useNavigate();
+
   const uploadHandler = async (e) => {
     // get the file from the event
     const file = e.target.files[0];
@@ -27,6 +30,7 @@ const FileUpload = () => {
         alert("Error uploading file");
       } else {
         console.log("ack");
+        navigate("/view");
       }
     }
   };
