@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from io import BytesIO
+from utils import *
 
 app = Flask(__name__)
 
@@ -11,10 +11,11 @@ def upload_file():
     try:
         file = request.files['file_from_react']
         filename = file.filename
-        print(f"Uploading file {filename}")
+        print(f"\nUploading file {filename}\n")
         file_bytes = file.read()
-        file_content = BytesIO(file_bytes).readlines()
-        print(file_content)
+        initial_dict = yaml_to_dict(file_bytes)
+
+        print(initial_dict)
         d['status'] = 1
 
     except Exception as e:
