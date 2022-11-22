@@ -1,36 +1,43 @@
 import yaml
 from yaml.loader import BaseLoader
 
-
-
-initial_elements = {'nodes': [], 'edges': []}
+# with open('src/assets/investigation-engine.yaml', 'r') as f:
+#     data = dict(yaml.load(f, Loader=BaseLoader))
 phase_id = 1
 sp_id = 0.1  # step producers' id
 
-
+# Transform YAML file to a python dictionary
 def yaml_to_dict(data):
     return dict(yaml.load(data, Loader=BaseLoader))
 
 
-with open('src/assets/investigation-engine.yaml', 'r') as f:
-    data = dict(yaml.load(f, Loader=BaseLoader))
-#     # print(data)
-yaml_piplines = data['pipeline']
-# # print(len(piplines[0]))
-# # print(data.keys()
+def create_elements(data):
+    initial_elements = {'nodes': [], 'edges': []}
+    yaml_pipelines = data['pipeline']
+    pipelines, inner_edges = create_pipelines(yaml_pipelines)
+    # print(pipelines)
+    initial_elements['nodes'].extend(pipelines)
+    initial_elements['edges'].extend(inner_edges)
+    edges = create_edges(pipelines)
+    initial_elements['edges'].extend(edges)
+    return initial_elements
 
 
 def create_pipelines(yaml_pipelines):
+    pipelines = []
+    inner_edges = []
     new_pl = {}
     for pipeline in yaml_pipelines:
         new_pl['name'] = pipeline['name']
         new_pl['type'] = pipeline['type']
         phases, edges = create_phases(pipeline['phases'], pipeline['type'])
         new_pl['phases'] = phases
-        initial_elements['nodes'].append(new_pl)
+        pipelines.append(new_pl)
+        # initial_elements['nodes'].append(new_pl)
         if len(edges) != 0:
-            initial_elements['edges'].extend(edges)        
+            inner_edges.extend(edges)        
         new_pl = {}
+    return pipelines, inner_edges
 
 
 def create_phases(yaml_phases, type):
@@ -126,8 +133,8 @@ def create_edges(pipelines):
             new_edge['target'] = pipeline['phases'][-1]['id']
             edges.append(new_edge)
             new_edge={}
-
-    print(edges)
+    return edges
+    # print(edges)
 
 
 # a function that creates the edge of the step producer DAG
@@ -136,14 +143,16 @@ def create_inner_edges(src, target):
     new_edge['id'] = 'e' + str(src) + '-' + str(target)
     new_edge['source'] = str(src)
     new_edge['target'] = str(target)
-    print(new_edge)
+    # print(new_edge)
     return new_edge
 
 
+# elem_dict = create_elements(data)
+# print(elem_dict)
 
-create_pipelines(yaml_piplines)
-print(initial_elements['nodes'])
-print(initial_elements['edges'])
+# create_pipelines(yaml_piplines)
+# print(initial_elements['nodes'])
+# print(initial_elements['edges'])
 
 # create_edges(initial_elements['nodes'])
 # create_inner_edges(initial_elements['nodes'])
