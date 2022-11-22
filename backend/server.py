@@ -16,13 +16,12 @@ def upload_file():
         print(f"\nUploading file {filename}\n")
         file_bytes = file.read()
         initial_dict = yaml_to_dict(file_bytes)
-        create_fake_node(initial_dict)
+        elements_dict = create_elements(initial_dict)
 
-        print(initial_dict)
-        d['response'] = fake_node
+        print(elements_dict)
+        d['response'] = elements_dict
 
     except Exception as e:
-        print(f"Couldn't upload file {e}")
         d['response'] = 0
 
     return jsonify(d)

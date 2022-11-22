@@ -30,9 +30,8 @@ const FileUpload = () => {
       if (res.response == 0) {
         alert("Error uploading file");
       } else {
-        console.log(`the response is: ${res.response}`);
-        nodes = [res.response];
-        console.log(`now nodes equivalent to: ${res.response}`);
+        console.log(res.response);
+        //nodes = [res.response];
         navigate("/view");
       }
     }
