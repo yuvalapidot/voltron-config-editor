@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
-from utils import *
+from server.test import *
+from server.utils import *
 
 app = Flask(__name__)
+print(f"from main: {fake_node}")
 
 
 @app.route('/', methods=['POST'])
@@ -14,15 +16,14 @@ def upload_file():
         print(f"\nUploading file {filename}\n")
         file_bytes = file.read()
         initial_dict = yaml_to_dict(file_bytes)
+        create_fake_node(initial_dict)
 
         print(initial_dict)
-        d['status'] = 1
+        d['response'] = fake_node
 
     except Exception as e:
         print(f"Couldn't upload file {e}")
-        d['status'] = 0
-
-    print(d)
+        d['response'] = 0
 
     return jsonify(d)
 
