@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
+import { nodes } from "../elements";
 
 const FileUpload = () => {
   const navigate = useNavigate();
@@ -26,10 +27,12 @@ const FileUpload = () => {
       let res = await response.json();
 
       // validate the response
-      if (res.status !== 1) {
+      if (res.response == 0) {
         alert("Error uploading file");
       } else {
-        console.log("ack");
+        console.log(`the response is: ${res.response}`);
+        nodes = [res.response];
+        console.log(`now nodes equivalent to: ${res.response}`);
         navigate("/view");
       }
     }
