@@ -10,10 +10,10 @@ def yaml_to_dict(data):
     return dict(yaml.load(data, Loader=BaseLoader))
 
 
-# with open('src/assets/investigation-engine.yaml', 'r') as f:
-#     data = dict(yaml.load(f, Loader=BaseLoader))
+with open('src/assets/investigation-engine.yaml', 'r') as f:
+    data = dict(yaml.load(f, Loader=BaseLoader))
 #     # print(data)
-# yaml_piplines = data['pipeline']
+yaml_piplines = data['pipeline']
 # # print(len(piplines[0]))
 # # print(data.keys()
 
@@ -23,12 +23,12 @@ def create_pipelines(yaml_pipelines):
     for pipeline in yaml_pipelines:
         new_pl['name'] = pipeline['name']
         new_pl['type'] = pipeline['type']
-        new_pl['phases'] = create_phases(pipeline['phases'])
+        new_pl['phases'] = create_phases(pipeline['phases'], pipeline['type'])
         initial_elements['nodes'].append(new_pl)
         new_pl = {}
 
 
-def create_phases(yaml_phases):
+def create_phases(yaml_phases, type):
     pl_phases = []
     phase_node = {}
     length = len(yaml_phases)
@@ -39,7 +39,9 @@ def create_phases(yaml_phases):
         phase_node['data'] = [phase['name'], phase['type']]
 
         # decide type of react flow node (default/input/output/group)
-        if length == 1:
+        if type == 'loop':
+            phase_node['type'] = 'default'
+        elif length == 1:
             phase_node['type'] = 'group'
 
         elif ind == 0:
@@ -55,6 +57,8 @@ def create_phases(yaml_phases):
             phase['producers'])
         pl_phases.append(phase_node)
         phase_id += 1
+        global sp_id
+        sp_id = 0.1
         phase_node = {}
     return pl_phases
 
@@ -74,7 +78,7 @@ def create_step_producers(producers_list):
             producer_node['type'] = 'output'
             node_to_update = sp['run_after']
             for psp in phase_step_producers:
-                if psp['data'] == node_to_update:
+                if psp['data'] in node_to_update:
                     if psp['type'] == 'group':
                         psp['type'] = 'input'
                     else:
@@ -90,7 +94,36 @@ def create_step_producers(producers_list):
     return phase_step_producers
 
 
-# create_pipelines(yaml_piplines)
-print(initial_elements['nodes'])
+# handle edges
+def create_edges(pipelines):
+    # print(pipelines)
+    edges = []
+    new_edge = {}
+    for pipeline in pipelines:
+        if len(pipeline) > 1:
+            for i in range(len(pipeline['phases']) - 1):
+                new_edge['id'] = 'e' + str(pipeline['phases'][i]['id']) + '-' + str(pipeline['phases'][i+1]['id'])
+                new_edge['source'] = pipeline['phases'][i]['id']
+                new_edge['target'] = pipeline['phases'][i+1]['id']
+                edges.append(new_edge)
+                new_edge={}
+        if pipeline['type'] == 'loop':
+            new_edge['id'] = 'e' + str(pipeline['phases'][i]['id']) + '-' + str(pipeline['phases'][i+1]['id'])
+            new_edge['source'] = pipeline['phases'][i]['id']
+            new_edge['target'] = pipeline['phases'][i+1]['id']
+            edges.append(new_edge)
+    print(edges)
 
-# print(type(data['pipeline'][0]['phases']))
+
+create_pipelines(yaml_piplines)
+create_edges(initial_elements['nodes'])
+
+
+# create_pipelines(yaml_piplines)
+# print(initial_elements['nodes'][1])
+
+# print(type(data['pipeline'][0]['type']))
+# lst=[1,2,3]
+# print(range(len(lst)))
+# for i in range(len(lst)):
+#     print(i)
