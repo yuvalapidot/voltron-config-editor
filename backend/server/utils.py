@@ -20,6 +20,8 @@ def create_elements(data):
     initial_elements['edges'].extend(inner_edges)
     edges = create_edges(pipelines)
     initial_elements['edges'].extend(edges)
+    global phase_id
+    phase_id = 1
     return initial_elements
 
 

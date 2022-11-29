@@ -4,6 +4,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
 import { nodes, calculatePosition, setNodes } from "../elements";
+import { flatten } from "../elements";
 
 const FileUpload = () => {
   const navigate = useNavigate();
