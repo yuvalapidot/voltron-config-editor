@@ -5,6 +5,11 @@ export function setNodes(nestedNodes) {
   nodes = calculatePosition(nestedNodes);
 }
 
+export function setEdges(edgesFromBackend) {
+  edges = edgesFromBackend;
+  console.log(edges);
+}
+
 // position calculators:
 export function calculatePosition(nestedNodes) {
   let nodesAccumulator = [];
@@ -25,9 +30,11 @@ export function calculatePosition(nestedNodes) {
           console.log("phase");
           phase.position = { x: horizonalPosition, y: verticalPosition };
           horizonalPosition += spacer;
-          nodesAccumulator.push(phase);
+          nodes.push(phase);
         }
       );
+      horizonalPosition = 0;
+      verticalPosition += spacer;
     }
     // loop case
     // else {
@@ -47,8 +54,8 @@ export function calculatePosition(nestedNodes) {
     //   );
     // }
   });
-  nodes = nodesAccumulator;
   console.log(nodes);
+  return;
 }
 
 // position calculators:
