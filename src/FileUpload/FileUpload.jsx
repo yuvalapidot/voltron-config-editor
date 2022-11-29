@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
-import { nodes } from "../elements";
+import { nodes, calculatePosition, setNodes } from "../elements";
 
 const FileUpload = () => {
   const navigate = useNavigate();
@@ -30,8 +30,8 @@ const FileUpload = () => {
       if (res.response == 0) {
         alert("Error uploading file");
       } else {
-        console.log(res.response);
-        //nodes = [res.response];
+        console.log(res.response.nodes);
+        setNodes(res.response.nodes);
         navigate("/view");
       }
     }
