@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
-import { nodes, calculatePosition, setNodes } from "../elements";
+import { nodes, calculatePosition, setNodes, setEdges } from "../elements";
 import { flatten } from "../elements";
 
 const FileUpload = () => {
@@ -33,6 +33,7 @@ const FileUpload = () => {
       } else {
         console.log(res.response.nodes);
         setNodes(res.response.nodes);
+        setEdges(res.response.edges);
         navigate("/view");
       }
     }
