@@ -43,7 +43,7 @@ const FileUpload = () => {
     <>
       <div className="file-card">
         <div className="file-inputs">
-          <input type="file" onChange={uploadHandler} />
+          <input type="file" accept=".yaml, .json" onChange={uploadHandler} />
           <button>
             <i>
               <FontAwesomeIcon icon={faPlus} />

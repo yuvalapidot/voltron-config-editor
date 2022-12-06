@@ -7,6 +7,8 @@ phase_id = 1
 sp_id = 0.1  # step producers' id
 
 # Transform YAML file to a python dictionary
+
+
 def yaml_to_dict(data):
     return dict(yaml.load(data, Loader=BaseLoader))
 
@@ -37,7 +39,7 @@ def create_pipelines(yaml_pipelines):
         pipelines.append(new_pl)
         # initial_elements['nodes'].append(new_pl)
         if len(edges) != 0:
-            inner_edges.extend(edges)        
+            inner_edges.extend(edges)
         new_pl = {}
     return pipelines, inner_edges
 
@@ -50,26 +52,26 @@ def create_phases(yaml_phases, type):
     for phase in yaml_phases:
         ind = yaml_phases.index(phase)
         global phase_id
-        phase_node['id'] = phase_id
-        phase_node['data'] = [phase['name'], phase['type']]
+        phase_node['id'] = str(phase_id)
+        phase_node['data'] = phase['name'] + ' - ' + phase['type']
 
         # decide type of react flow node (default/input/output/group)
-        if type == 'loop':
-            phase_node['type'] = 'default'
-        elif length == 1:
-            phase_node['type'] = 'group'
+        # if type == 'loop':
+        #     phase_node['type'] = 'default'
+        # elif length == 1:
+        #     phase_node['type'] = 'group'
 
-        elif ind == 0:
-            phase_node['type'] = 'input'
+        # elif ind == 0:
+        #     phase_node['type'] = 'input'
 
-        elif ind == length - 1:
-            phase_node['type'] = 'output'
+        # elif ind == length - 1:
+        #     phase_node['type'] = 'output'
 
-        else:
-            phase_node['type'] = 'default'
+        # else:
+        #     phase_node['type'] = 'default'
 
         step_producers, inner_edges = create_step_producers(phase['producers'])
-        phase_node['step_producers'] = step_producers 
+        phase_node['step_producers'] = step_producers
         pl_phases.append(phase_node)
         if len(inner_edges) != 0:
             pl_inner_edges.extend(inner_edges)
@@ -88,25 +90,25 @@ def create_step_producers(producers_list):
     for sp in producers_list:
         global sp_id
         new_id = phase_id + sp_id
-        producer_node['id'] = new_id
+        producer_node['id'] = str(new_id)
         producer_node['data'] = sp['name']
-        producer_node['parent_node'] = phase_id
+        producer_node['parentNode'] = str(phase_id)
         producer_node['extent'] = 'parent'
 
         # decide type of react flow node (default/input/output/group)
         if 'run_after' in sp:
-            producer_node['type'] = 'output'
+            # producer_node['type'] = 'output'
             node_to_update = sp['run_after']
             for psp in phase_step_producers:
                 if psp['data'] in node_to_update:
-                    if psp['type'] == 'group':
-                        psp['type'] = 'input'
-                    else:
-                        psp['type'] = 'default'
+                    #     if psp['type'] == 'group':
+                    #         psp['type'] = 'input'
+                    #     else:
+                    #         psp['type'] = 'default'
                     inner_edges.append(create_inner_edges(psp['id'], new_id))
 
-        else:
-            producer_node['type'] = 'group'
+        # else:
+        #     producer_node['type'] = 'group'
 
         phase_step_producers.append(producer_node)
         sp_id += 0.1
@@ -124,23 +126,26 @@ def create_edges(pipelines):
         # print(pipeline['type']=='loop')
         if len(pipeline) > 1:
             for i in range(len(pipeline['phases']) - 1):
-                new_edge['id'] = 'e' + str(pipeline['phases'][i]['id']) + '-' + str(pipeline['phases'][i+1]['id'])
+                new_edge['id'] = 'e' + str(pipeline['phases'][i]['id']) + \
+                    '-' + str(pipeline['phases'][i+1]['id'])
                 new_edge['source'] = pipeline['phases'][i]['id']
                 new_edge['target'] = pipeline['phases'][i+1]['id']
                 edges.append(new_edge)
-                new_edge={}
-        if pipeline['type'] == 'loop':  # If the pipeline is of type 'loop', add an edge between the first phase and the last
-            new_edge['id'] = 'e' + str(pipeline['phases'][0]['id']) + '-' + str(pipeline['phases'][-1]['id'])
+                new_edge = {}
+        # If the pipeline is of type 'loop', add an edge between the first phase and the last
+        if pipeline['type'] == 'loop':
+            new_edge['id'] = 'e' + str(pipeline['phases'][0]
+                                       ['id']) + '-' + str(pipeline['phases'][-1]['id'])
             new_edge['source'] = pipeline['phases'][0]['id']
             new_edge['target'] = pipeline['phases'][-1]['id']
             edges.append(new_edge)
-            new_edge={}
+            new_edge = {}
     return edges
     # print(edges)
 
 
 # a function that creates the edge of the step producer DAG
-def create_inner_edges(src, target): 
+def create_inner_edges(src, target):
     new_edge = {}
     new_edge['id'] = 'e' + str(src) + '-' + str(target)
     new_edge['source'] = str(src)
