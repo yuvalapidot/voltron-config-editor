@@ -130,6 +130,7 @@ def create_edges(pipelines):
                     '-' + str(pipeline['phases'][i+1]['id'])
                 new_edge['source'] = pipeline['phases'][i]['id']
                 new_edge['target'] = pipeline['phases'][i+1]['id']
+                # new_edge['type'] = "step"
                 edges.append(new_edge)
                 new_edge = {}
         # If the pipeline is of type 'loop', add an edge between the first phase and the last
@@ -150,7 +151,10 @@ def create_inner_edges(src, target):
     new_edge['id'] = 'e' + str(src) + '-' + str(target)
     new_edge['source'] = str(src)
     new_edge['target'] = str(target)
+    # new_edge['type'] = "step"
+    new_edge['animated'] = True
     # print(new_edge)
+
     return new_edge
 
 
