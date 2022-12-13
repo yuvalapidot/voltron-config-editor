@@ -31,7 +31,7 @@ const FileUpload = () => {
       if (res.response == 0) {
         alert("Error uploading file");
       } else {
-        console.log(res.response.nodes);
+        // console.log(res.response.nodes);
         setNodes(res.response.nodes);
         setEdges(res.response.edges);
         navigate("/view");

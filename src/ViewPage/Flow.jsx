@@ -5,21 +5,14 @@ import ReactFlow, {
   useNodesState,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { nodes, edges, updateParentSize } from "../elements";
+import { nodes, edges } from "../elements";
 
 let needToUpdateNodes = true;
 
 function Flow() {
-  console.log("in flow func");
-  console.log(nodes);
-
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
 
-  if (needToUpdateNodes) {
-    setNodes((nds) => updateParentSize(nds));
-    needToUpdateNodes = false;
-  }
-
+  console.log("in flow after update");
   console.log(nodesWithState);
 
   return (
