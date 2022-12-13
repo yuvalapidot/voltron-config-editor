@@ -137,8 +137,8 @@ def create_edges(pipelines):
         if pipeline['type'] == 'loop':
             new_edge['id'] = 'e' + str(pipeline['phases'][0]
                                        ['id']) + '-' + str(pipeline['phases'][-1]['id'])
-            new_edge['source'] = pipeline['phases'][0]['id']
-            new_edge['target'] = pipeline['phases'][-1]['id']
+            new_edge['target'] = pipeline['phases'][0]['id']
+            new_edge['source'] = pipeline['phases'][-1]['id']
             edges.append(new_edge)
             new_edge = {}
     return edges
