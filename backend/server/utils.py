@@ -3,12 +3,13 @@ from yaml.loader import BaseLoader
 
 # with open('src/assets/investigation-engine.yaml', 'r') as f:
 #     data = dict(yaml.load(f, Loader=BaseLoader))
-phase_id = 1
-sp_id = 0.1  # step producers' id
+
+# ID variables
+pipline_id = 1 # Pipline ID counter
+phase_id = 1  # Phase ID counter
+sp_id = 0.1  # Step producer ID counter
 
 # Transform YAML file to a python dictionary
-
-
 def yaml_to_dict(data):
     return dict(yaml.load(data, Loader=BaseLoader))
 
@@ -32,7 +33,10 @@ def create_pipelines(yaml_pipelines):
     inner_edges = []
     new_pl = {}
     for pipeline in yaml_pipelines:
-        new_pl['name'] = pipeline['name']
+        global pipline_id
+        id_str = "pl-" + str(pipline_id)
+        new_pl['id'] = id_str
+        new_pl['data'] = pipeline['name']
         new_pl['type'] = pipeline['type']
         phases, edges = create_phases(pipeline['phases'], pipeline['type'])
         new_pl['phases'] = phases
@@ -41,6 +45,7 @@ def create_pipelines(yaml_pipelines):
         if len(edges) != 0:
             inner_edges.extend(edges)
         new_pl = {}
+        pipline_id += 1
     return pipelines, inner_edges
 
 
@@ -52,8 +57,11 @@ def create_phases(yaml_phases, type):
     for phase in yaml_phases:
         ind = yaml_phases.index(phase)
         global phase_id
+        global pipline_id
         phase_node['id'] = str(phase_id)
         phase_node['data'] = phase['name'] + ' - ' + phase['type']
+        # phase_node['parentNode'] = "pl-" + str(pipline_id)
+        # phase_node['extent'] = 'parent'
 
         # decide type of react flow node (default/input/output/group)
         # if type == 'loop':
