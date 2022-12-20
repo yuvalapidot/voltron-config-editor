@@ -1,5 +1,5 @@
 var config = {};
 
-config.NumOfSP = 3;
+config.NumOfSP = 4;
 
 module.exports = config;
