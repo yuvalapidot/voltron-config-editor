@@ -9,9 +9,9 @@ body {
   font-family: 'Open-Sans',sans-serif;
   color: #343a4a;
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   min-height: 100vh;
-  padding: 80px;
+  
 }
 
 code {
