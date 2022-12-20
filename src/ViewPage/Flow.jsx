@@ -12,22 +12,17 @@ let needToUpdateNodes = true;
 function Flow() {
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
 
-  console.log("in flow after update");
-  console.log(nodesWithState);
-
   return (
-    <div style={{ height: "100%" }}>
-      <ReactFlow
-        nodes={nodesWithState}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        fitView
-      >
-        <MiniMap zoomable pannable/>
-        <Background />
-        <Controls />
-      </ReactFlow>
-    </div>
+    <ReactFlow
+      nodes={nodesWithState}
+      edges={edges}
+      onNodesChange={onNodesChange}
+      fitView
+    >
+      <Background />
+      <MiniMap zoomable pannable />
+      <Controls />
+    </ReactFlow>
   );
 }
 
