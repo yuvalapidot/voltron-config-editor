@@ -1,5 +1,6 @@
 import { MarkerType } from "reactflow";
-
+const config = require('./config');
+const num_of_sp = config.NumOfSP;
 export let nodes = [];
 export let edges = [];
 
@@ -27,7 +28,7 @@ export function calculatePosition(nestedNodes) {
   let nodesAccumulator = [];
 
   //FOR FHASES:
-  let PHASE_HEIGHT = 55 * 5 + 10;
+  let PHASE_HEIGHT = 55 * (num_of_sp + 1) + 10;
   let spacer = 300;
   let horizonalPosition = 0;
   let verticalPosition = 0;
