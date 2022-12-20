@@ -21,10 +21,11 @@ function Flow() {
         nodes={nodesWithState}
         edges={edges}
         onNodesChange={onNodesChange}
+        fitView
       >
+        <MiniMap zoomable pannable/>
         <Background />
         <Controls />
-        <MiniMap />
       </ReactFlow>
     </div>
   );
