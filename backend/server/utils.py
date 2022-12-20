@@ -106,7 +106,6 @@ def create_step_producers(producers_list):
                     #     else:
                     #         psp['type'] = 'default'
                     inner_edges.append(create_inner_edges(psp['id'], new_id))
-
         # else:
         #     producer_node['type'] = 'group'
 

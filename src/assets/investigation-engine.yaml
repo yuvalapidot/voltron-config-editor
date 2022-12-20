@@ -16,10 +16,10 @@ common:
     class: storage.minio_client.MinioClient
     enable: "{{ENABLE_MINIO}}"
     parameters:
-        host: "{{MINIO_HOST}}"
-        auth: "{{AUTH}}"
-        bucket: "{{MINIO_BUCKET}}"
-        secure: "{{MINIO_SECURE}}"
+      host: "{{MINIO_HOST}}"
+      auth: "{{AUTH}}"
+      bucket: "{{MINIO_BUCKET}}"
+      secure: "{{MINIO_SECURE}}"
 
   responders: # todo: i don't see a better way to inject the common parameters
     - class: response.responders.block_account.BlockingAccount
@@ -97,9 +97,9 @@ state:
   class: graph.forensic_graph.ForensicGraph
   parameters:
     default_context:
-    - status
-    - results
-    - walk_through
+      - status
+      - results
+      - walk_through
     events_manager:
       class: graph.events_manager.EventsManager
       parameters:
@@ -108,7 +108,6 @@ state:
         max_events_per_node: "{{MAX_EVENTS_PER_NODE}}"
 
 pipeline:
-
   - name: Initialization
     type: linear
     phases:
@@ -135,11 +134,9 @@ pipeline:
               window_end: "{{stop_ts}}"
               max_findings: "{{MAX_INPUT_FINDINGS}}"
 
-
   - name: Expansion Loop
     type: loop
     phases:
-
       - name: Investigation Timeout
         type: watchdog
         enable: "{{ENABLE_TIMEOUT_WATCHDOG}}"
@@ -348,7 +345,6 @@ pipeline:
               min_events: "{{WAIT_UDI_MIN_EVENTS}}"
               timeout: "{{WAIT_UDI_EVENTS_SECONDS}}"
               interval: 0.1
-
 
   - name: Completion
     type: linear
