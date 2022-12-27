@@ -70,7 +70,20 @@ export function calculatePosition(nestedNodes) {
     verticalPositionInPhase += spacerInPhase;
     nodesAccumulator.push(step_producer);
   };
-
+  
+  let getBorder = (phaseType) => {
+    console.log(phaseType)
+    if (phaseType === 'blocking'){
+      return "2px solid"
+    }
+    else if (phaseType === 'watchdog'){
+      return "2px dashed"
+    }
+    else{
+      return "2px solid #949494"
+    }
+    // return "3px solid"
+  }
   nestedNodes.forEach((pipeline) => {
     // pipeline is a dict contins also the phases list
     //let numberOfPhases = pipeline.phases.length(); // phases is a list phases dicts
@@ -99,17 +112,18 @@ export function calculatePosition(nestedNodes) {
           phase // phase is a dict
         ) => {
           // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
-          phase.data = { label: phase.data };
+          phase.data = { label: phase.data + ' - ' + phase.pType};
           phase.position = { x: horizonalPosition, y: verticalPosition };
           horizonalPosition += spacer;
           //defining the target and source positions
           phase["targetPosition"] = "left";
           phase["sourcePosition"] = "right";
-
+          let border = getBorder(phase.pType);
           phase["style"] = {
             backgroundColor: "rgba(255, 0, 0, 0.2)",
             width: 200,
             height: PHASE_HEIGHT,
+            border: border,
           };
           // delete phase["type"];
           nodesAccumulator.push(phase);
@@ -248,11 +262,13 @@ export function calculatePosition(nestedNodes) {
           }
 
           // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
-          phase.data = { label: phase.data };
+          phase.data = { label: phase.data + ' - ' + phase.pType };
+          let border = getBorder(phase.pType);
           phase["style"] = {
             backgroundColor: "rgba(255, 0, 0, 0.2)",
             width: 200,
             height: PHASE_HEIGHT,
+            border: border,
           };
           // delete phase["type"];
           nodesAccumulator.push(phase);

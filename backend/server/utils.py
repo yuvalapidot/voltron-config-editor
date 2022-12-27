@@ -59,7 +59,9 @@ def create_phases(yaml_phases, type):
         global phase_id
         global pipline_id
         phase_node['id'] = str(phase_id)
-        phase_node['data'] = phase['name'] + ' - ' + phase['type']
+        # phase_node['data'] = phase['name'] + ' - ' + phase['type']
+        phase_node['data'] = phase['name']
+        phase_node['pType'] = phase['type']
         phase_node['parentNode'] = "pl-" + str(pipline_id)
         phase_node['extent'] = 'parent'
 
