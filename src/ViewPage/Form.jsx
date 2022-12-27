@@ -10,6 +10,7 @@ function Form(props) {
     setSPName(event.target.value);
   };
   console.log(props.nodeInfo.nodeId);
+
   let handleClick = () => {
     props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
   };
@@ -25,6 +26,13 @@ function Form(props) {
               label={props.nodeInfo.nodeName}
               placeholder="change step producer name"
               fullWidth
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleClick();
+                  // write your functionality here
+                }
+              }}
               onChange={handleSPNameChange}
             ></TextField>
             <Grid item>
