@@ -60,8 +60,8 @@ def create_phases(yaml_phases, type):
         global pipline_id
         phase_node['id'] = str(phase_id)
         phase_node['data'] = phase['name'] + ' - ' + phase['type']
-        # phase_node['parentNode'] = "pl-" + str(pipline_id)
-        # phase_node['extent'] = 'parent'
+        phase_node['parentNode'] = "pl-" + str(pipline_id)
+        phase_node['extent'] = 'parent'
 
         # decide type of react flow node (default/input/output/group)
         # if type == 'loop':
