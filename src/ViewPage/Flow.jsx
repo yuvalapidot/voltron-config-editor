@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -7,14 +8,30 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { nodes, edges } from "../elements";
 
-let clickedNodeId = null;
-
-function Flow() {
+function Flow(props) {
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
+
+  useEffect(() => {
+    setNodes((nodesWithState) =>
+      nodesWithState.map((node) => {
+        if (node.id === props.changesToApply.nodeId) {
+          // it's important that you create a new object here
+          // in order to notify react flow about the change
+          node.data = {
+            ...node.data,
+            label: props.changesToApply.newName,
+          };
+        }
+
+        return node;
+      })
+    );
+  }, [props.changesToApply.newName]);
+
   let handleClick = (e, node) => {
-    clickedNodeId = node.id;
-    console.log(clickedNodeId);
+    props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
   };
+
   return (
     <ReactFlow
       nodes={nodesWithState}

@@ -4,13 +4,18 @@ import { useState } from "react";
 import EditButton from "./EditButton";
 import Form from "./Form";
 
-function EditWindow() {
+function EditWindow(props) {
   let [editorStyle, setEditorStyle] = useState(editorStyleClosed);
 
   return (
     <div style={editorStyle}>
       <EditButton onClick={(newState) => setEditorStyle(newState)} />
-      {editorStyle === editorStyleOpen ? <Form /> : null}
+      {editorStyle === editorStyleOpen ? (
+        <Form
+          nodeInfo={props.nodeInfo}
+          setChangesToApply={(changes) => props.setChangesToApply(changes)}
+        />
+      ) : null}
     </div>
   );
 }
