@@ -26,7 +26,7 @@ function Flow(props) {
         return node;
       })
     );
-  }, [props.changesToApply.newName]);
+  }, [props.changesToApply]);
 
   let handleClick = (e, node) => {
     props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });

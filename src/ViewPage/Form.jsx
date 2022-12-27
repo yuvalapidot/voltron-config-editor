@@ -9,9 +9,9 @@ function Form(props) {
   const handleSPNameChange = (event) => {
     setSPName(event.target.value);
   };
-
+  console.log(props.nodeInfo.nodeId);
   let handleClick = () => {
-    props.setChangesToApply({ newName: SPName });
+    props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
   };
 
   return (

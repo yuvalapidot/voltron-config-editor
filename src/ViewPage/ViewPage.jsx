@@ -21,7 +21,7 @@ function ViewPage() {
         style={{ height: "90vh", width: "200vh" }}
       >
         <Flow
-          changesToApply={{ ...changesToApply, nodeId: clickedNodeInfo.nodeId }}
+          changesToApply={changesToApply}
           updateNodeId={(nodeId) => setClickedNodeInfo(nodeId)}
         />
       </div>
