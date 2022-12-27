@@ -7,8 +7,6 @@ import ReactFlow, {
 import "reactflow/dist/style.css";
 import { nodes, edges } from "../elements";
 
-let needToUpdateNodes = true;
-
 function Flow() {
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
 
