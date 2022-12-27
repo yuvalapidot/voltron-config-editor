@@ -2,6 +2,7 @@ import React from "react";
 import "./ViewPage.scss";
 import { useState } from "react";
 import EditButton from "./EditButton";
+import Form from "./Form";
 
 function EditWindow() {
   let [editorStyle, setEditorStyle] = useState(editorStyleClosed);
@@ -9,6 +10,7 @@ function EditWindow() {
   return (
     <div style={editorStyle}>
       <EditButton onClick={(newState) => setEditorStyle(newState)} />
+      {editorStyle === editorStyleOpen ? <Form /> : null}
     </div>
   );
 }
