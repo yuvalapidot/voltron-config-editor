@@ -30,49 +30,51 @@ function PhaseForm() {
   };
 
   return (
-    <form>
-      <TextField
-        id="phase-name"
-        label="Name"
-        margin="normal"
-        variant="outlined"
-        value={value}
-      />
-      <br />
-      <TextField
-        id="outlined-basic"
-        label="Type"
-        select
-        defaultValue="blocking"
-        margin="normal"
-        variant="outlined"
-      >
-        {types.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
-            {option.label}
-          </MenuItem>
-        ))}
-      </TextField>
-      <br />
-      <FormControl>
-        <FormLabel id="demo-controlled-radio-buttons-group">Enable</FormLabel>
-        <RadioGroup
-          aria-labelledby="demo-controlled-radio-buttons-group"
-          name="controlled-radio-buttons-group"
+    <div style={formStyle}>
+      <form>
+        <TextField
+          id="phase-name"
+          label="Name"
+          margin="normal"
+          variant="outlined"
           value={value}
-          onChange={handleChange}
+        />
+        <br />
+        <TextField
+          id="outlined-basic"
+          label="Type"
+          select
+          defaultValue="blocking"
+          margin="normal"
+          variant="outlined"
         >
-          <FormControlLabel value="on" control={<Radio />} label="On" />
-          <FormControlLabel value="off" control={<Radio />} label="Off" />
-          <FormControlLabel
-            value="config"
-            control={<Radio />}
-            label="From Configuration File"
-          />
-        </RadioGroup>
-      </FormControl>
-      <div></div>
-    </form>
+          {types.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.label}
+            </MenuItem>
+          ))}
+        </TextField>
+        <br />
+        <FormControl>
+          <FormLabel id="demo-controlled-radio-buttons-group">Enable</FormLabel>
+          <RadioGroup
+            aria-labelledby="demo-controlled-radio-buttons-group"
+            name="controlled-radio-buttons-group"
+            value={value}
+            onChange={handleChange}
+          >
+            <FormControlLabel value="on" control={<Radio />} label="On" />
+            <FormControlLabel value="off" control={<Radio />} label="Off" />
+            <FormControlLabel
+              value="config"
+              control={<Radio />}
+              label="From Configuration File"
+            />
+          </RadioGroup>
+        </FormControl>
+        <div></div>
+      </form>
+    </div>
   );
 }
 
