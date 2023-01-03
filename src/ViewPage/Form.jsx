@@ -5,10 +5,18 @@ import { Grid } from "@mui/material";
 import StepProducerForm from "./StepProducerForm";
 import PhaseForm from "./PhaseForm";
 import PipelineForm from "./PipelineForm";
+import SaveButton from "./SaveButton";
 
 function Form(props) {
   return (
-    <div style={{ width: "100%" }}>
+    <div
+      style={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
       {props.nodeInfo.nodeId === "0" ? (
         "Create a new pipeline"
       ) : props.nodeInfo.nodeId.includes(".") ? (
@@ -21,6 +29,7 @@ function Form(props) {
       ) : (
         <PhaseForm />
       )}
+      <SaveButton />
     </div>
   );
 }
