@@ -14,12 +14,12 @@ function Flow(props) {
   useEffect(() => {
     setNodes((nodesWithState) =>
       nodesWithState.map((node) => {
-        if (node.id === props.changesToApply.nodeId) {
+        if (node.id === props.changesToApply.id) {
           // it's important that you create a new object here
           // in order to notify react flow about the change
           node.data = {
             ...node.data,
-            label: props.changesToApply.newName,
+            label: props.changesToApply.data.label,
           };
         }
 
@@ -29,7 +29,8 @@ function Flow(props) {
   }, [props.changesToApply]);
 
   let handleNodeClick = (e, node) => {
-    props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
+    // props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
+    props.updateNodeId(node);
   };
 
   let handlePaneClick = (e) => {

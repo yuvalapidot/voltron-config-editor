@@ -1,30 +1,36 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { Grid } from "@mui/material";
 
 function StepProducerForm(props) {
-  const [SPName, setSPName] = useState("");
+  const [SPName, setSPName] = useState(props.nodeInfo.data.label);
+
+  useEffect(() => {
+    setSPName(props.nodeInfo.data.label)
+  }, [props.nodeInfo]);
 
   const handleSPNameChange = (event) => {
     setSPName(event.target.value);
   };
-  console.log(props.nodeInfo.nodeId);
+  console.log(props.nodeInfo);
 
   let handleClick = () => {
-    props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
+    // props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
+    props.setChangesToApply({...props.nodeInfo, data: {...props.nodeInfo.data, label:SPName}});
+    // console.log(props.nodeInfo);
   };
 
   return (
     <div style={formStyle}>
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
-          <Grid xs={10} item>
+          <Grid item xs={10}>
             <TextField
+              id='sp-name'
+              label='Name:'
               value={SPName}
               margin="normal"
-              label={props.nodeInfo.nodeName}
-              placeholder="Change step producer name"
               fullWidth
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
@@ -34,11 +40,11 @@ function StepProducerForm(props) {
               }}
               onChange={handleSPNameChange}
             ></TextField>
-            <Grid xs={6} item>
-              <Button onClick={handleClick} variant="contained">
-                APPLY CHANGES
-              </Button>
-            </Grid>
+          </Grid>
+          <Grid xs={6} item>
+            <Button onClick={handleClick} variant="contained">
+              APPLY CHANGES
+            </Button>
           </Grid>
         </Grid>
       </form>
