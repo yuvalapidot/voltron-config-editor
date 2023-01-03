@@ -1,9 +1,7 @@
 from flask import Flask, request, jsonify
-from server.test import *
 from server.utils import *
 
 app = Flask(__name__)
-print(f"from main: {fake_node}")
 
 
 @app.route('/', methods=['POST'])

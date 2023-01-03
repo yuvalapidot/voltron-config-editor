@@ -18,7 +18,6 @@ def create_elements(data):
     initial_elements = {'nodes': [], 'edges': []}
     yaml_pipelines = data['pipeline']
     pipelines, inner_edges = create_pipelines(yaml_pipelines)
-    # print(pipelines)
     initial_elements['nodes'].extend(pipelines)
     initial_elements['edges'].extend(inner_edges)
     edges = create_edges(pipelines)
@@ -62,25 +61,16 @@ def create_phases(yaml_phases, type):
         # phase_node['data'] = phase['name'] + ' - ' + phase['type']
         phase_node['data'] = phase['name']
         phase_node['pType'] = phase['type']
+        if 'enable' in phase:
+            phase_node['enable'] = phase['enable']
+        if 'thread_count' in phase:
+            phase_node['thread_count'] = phase['thread_count']
         phase_node['parentNode'] = "pl-" + str(pipline_id)
         phase_node['extent'] = 'parent'
 
-        # decide type of react flow node (default/input/output/group)
-        # if type == 'loop':
-        #     phase_node['type'] = 'default'
-        # elif length == 1:
-        #     phase_node['type'] = 'group'
-
-        # elif ind == 0:
-        #     phase_node['type'] = 'input'
-
-        # elif ind == length - 1:
-        #     phase_node['type'] = 'output'
-
-        # else:
-        #     phase_node['type'] = 'default'
-
         step_producers, inner_edges = create_step_producers(phase['producers'])
+   
+
         phase_node['step_producers'] = step_producers
         pl_phases.append(phase_node)
         if len(inner_edges) != 0:
@@ -102,6 +92,13 @@ def create_step_producers(producers_list):
         new_id = phase_id + sp_id
         producer_node['id'] = str(new_id)
         producer_node['data'] = sp['name']
+        producer_node['class'] = sp['class']
+        if 'enable' in sp:
+            producer_node['enable'] = sp['enable']
+        if 'parameters' in sp:
+            producer_node['parameters'] = sp['parameters']
+        
+
         producer_node['parentNode'] = str(phase_id)
         producer_node['extent'] = 'parent'
 
