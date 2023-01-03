@@ -28,8 +28,15 @@ function Flow(props) {
     );
   }, [props.changesToApply]);
 
-  let handleClick = (e, node) => {
+  let handleNodeClick = (e, node) => {
     props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
+  };
+
+  let handlePaneClick = (e) => {
+    props.updateNodeId({
+      nodeId: "0",
+      nodeName: "choose element from the graph",
+    });
   };
 
   return (
@@ -37,7 +44,8 @@ function Flow(props) {
       nodes={nodesWithState}
       edges={edges}
       onNodesChange={onNodesChange}
-      onNodeClick={handleClick}
+      onNodeClick={handleNodeClick}
+      onPaneClick={handlePaneClick}
       fitView
     >
       <Background />

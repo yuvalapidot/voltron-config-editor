@@ -2,55 +2,27 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { Grid } from "@mui/material";
+import StepProducerForm from "./StepProducerForm";
+import PhaseForm from "./PhaseForm";
+import PipelineForm from "./PipelineForm";
 
 function Form(props) {
-  const [SPName, setSPName] = useState("");
-
-  const handleSPNameChange = (event) => {
-    setSPName(event.target.value);
-  };
-  console.log(props.nodeInfo.nodeId);
-
-  let handleClick = () => {
-    props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
-  };
-
   return (
-    <div style={formStyle}>
-      <form style={{ width: "100%" }}>
-        <Grid container justifyContent="center" spacing={1}>
-          <Grid xs={10} item>
-            <TextField
-              value={SPName}
-              margin="normal"
-              label={props.nodeInfo.nodeName}
-              placeholder="change step producer name"
-              fullWidth
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleClick();
-                  // write your functionality here
-                }
-              }}
-              onChange={handleSPNameChange}
-            ></TextField>
-            <Grid item>
-              <Button onClick={handleClick} variant="contained">
-                APPLY CHANGES
-              </Button>
-            </Grid>
-          </Grid>
-        </Grid>
-      </form>
+    <div style={{ width: "100%" }}>
+      {props.nodeInfo.nodeId === "0" ? (
+        "Create a new pipeline"
+      ) : props.nodeInfo.nodeId.includes(".") ? (
+        <StepProducerForm
+          nodeInfo={props.nodeInfo}
+          setChangesToApply={(changes) => props.setChangesToApply(changes)}
+        />
+      ) : props.nodeInfo.nodeId.includes("pl") ? (
+        "<PipelineForm />"
+      ) : (
+        <PhaseForm />
+      )}
     </div>
   );
 }
-
-let formStyle = {
-  display: "flex",
-  justifyContent: "center",
-  width: "100%",
-};
 
 export default Form;
