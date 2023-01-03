@@ -19,12 +19,12 @@ function Form(props) {
     >
       {props.nodeInfo.nodeId === "0" ? (
         "Create a new pipeline"
-      ) : props.nodeInfo.nodeId.includes(".") ? (
+      ) : props.nodeInfo.id.includes(".") ? (
         <StepProducerForm
           nodeInfo={props.nodeInfo}
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
-      ) : props.nodeInfo.nodeId.includes("pl") ? (
+      ) : props.nodeInfo.id.includes("pl") ? (
         "<PipelineForm />"
       ) : (
         <PhaseForm />

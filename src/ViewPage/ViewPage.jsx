@@ -6,7 +6,7 @@ import EditWindow from "./EditWindow";
 function ViewPage() {
   let [clickedNodeInfo, setClickedNodeInfo] = useState({
     nodeName: "choose element from the graph",
-    nodeId: "0",
+    id: "0",
   });
   let [changesToApply, setChangesToApply] = useState({});
 
