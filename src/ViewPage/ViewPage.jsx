@@ -5,7 +5,7 @@ import EditWindow from "./EditWindow";
 
 function ViewPage() {
   let [clickedNodeInfo, setClickedNodeInfo] = useState({
-    nodeName: "choose a step-producer",
+    nodeName: "choose element from the graph",
     nodeId: "0",
   });
   let [changesToApply, setChangesToApply] = useState({});
