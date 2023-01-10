@@ -33,12 +33,12 @@ def save_file():
     data = request.get_json()
     yamlContent = data["yamlContent"]
     print(yamlContent)
-    yaml = yaml.safe_load(yamlContent)
+    newyaml = yaml.safe_load(yamlContent)
     d = {}
     try:
 
         with open('users.yaml', 'w') as f:
-            data_file = yaml.safe_dump(yaml, f)
+            data_file = yaml.safe_dump(newyaml, f)
 
         # d['response'] = elements_dict
 

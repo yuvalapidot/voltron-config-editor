@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { Grid } from "@mui/material";
@@ -7,7 +7,7 @@ function StepProducerForm(props) {
   const [SPName, setSPName] = useState(props.nodeInfo.data.label);
 
   useEffect(() => {
-    setSPName(props.nodeInfo.data.label)
+    setSPName(props.nodeInfo.data.label);
   }, [props.nodeInfo]);
 
   const handleSPNameChange = (event) => {
@@ -16,9 +16,10 @@ function StepProducerForm(props) {
   console.log(props.nodeInfo);
 
   let handleClick = () => {
-    // props.setChangesToApply({ newName: SPName, nodeId: props.nodeInfo.nodeId });
-    props.setChangesToApply({...props.nodeInfo, data: {...props.nodeInfo.data, label:SPName}});
-    // console.log(props.nodeInfo);
+    props.setChangesToApply({
+      ...props.nodeInfo,
+      data: { ...props.nodeInfo.data, label: SPName },
+    });
   };
 
   return (
@@ -27,8 +28,8 @@ function StepProducerForm(props) {
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
             <TextField
-              id='sp-name'
-              label='Name:'
+              id="sp-name"
+              label="Name:"
               value={SPName}
               margin="normal"
               fullWidth
