@@ -41,6 +41,22 @@ function StepProducerForm(props) {
               onChange={handleSPNameChange}
             ></TextField>
           </Grid>
+          <Grid item xs={10}>
+            <TextField
+              id='sp-name'
+              label='Name:'
+              value={SPName}
+              margin="normal"
+              fullWidth
+              onKeyPress={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleClick();
+                }
+              }}
+              onChange={handleSPNameChange}
+            ></TextField>
+          </Grid>
           <Grid xs={6} item>
             <Button onClick={handleClick} variant="contained">
               APPLY CHANGES
