@@ -19,7 +19,7 @@ const FileUpload = () => {
       data.append("file_from_react", file);
 
       // send the formdata with fetch
-      let response = await fetch("/", {
+      let response = await fetch("/upload", {
         method: "post",
         body: data,
       });

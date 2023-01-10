@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+import yaml
 from server.utils import *
+
 
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
     """Handles the upload of a file."""
     d = {}
@@ -16,8 +18,29 @@ def upload_file():
         initial_dict = yaml_to_dict(file_bytes)
         elements_dict = create_elements(initial_dict)
 
-        print(elements_dict)
+        # print(elements_dict)
         d['response'] = elements_dict
+
+    except Exception as e:
+        d['response'] = 0
+
+    return jsonify(d)
+
+
+@app.route('/save', methods=['POST'])
+def save_file():
+
+    data = request.get_json()
+    yamlContent = data["yamlContent"]
+    print(yamlContent)
+    newyaml = yaml.safe_load(yamlContent)
+    d = {}
+    try:
+
+        with open('users.yaml', 'w') as f:
+            data_file = yaml.safe_dump(newyaml, f)
+
+        # d['response'] = elements_dict
 
     except Exception as e:
         d['response'] = 0

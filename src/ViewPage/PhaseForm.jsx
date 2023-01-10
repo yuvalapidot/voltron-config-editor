@@ -6,6 +6,7 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
+import { Grid } from "@mui/material";
 
 const types = [
   {
@@ -32,13 +33,28 @@ function PhaseForm() {
   return (
     <div style={formStyle}>
       <form>
-        <TextField
-          id="phase-name"
-          label="Name"
-          margin="normal"
-          variant="outlined"
-          value={value}
-        />
+        <Grid container justifyContent="center" spacing={1}>
+          <Grid item xs={10}>
+            <TextField
+              id="phase-name"
+              label="Name"
+              margin="normal"
+              variant="outlined"
+              value={value}
+            />
+          </Grid>
+          <Grid xs={6} item>
+            <TextField
+              id="phase-name"
+              label="Name"
+              margin="normal"
+              variant="outlined"
+              value={value}
+            />
+          </Grid>
+          <Grid xs={6} item></Grid>
+        </Grid>
+
         <br />
         <TextField
           id="outlined-basic"
