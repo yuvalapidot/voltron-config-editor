@@ -1,15 +1,30 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import ReactFlow, {
   Controls,
   Background,
   MiniMap,
   useNodesState,
+  useEdgesState,
+  updateEdge,
+  addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { nodes, edges } from "../elements";
 
 function Flow(props) {
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
+  const [edgesWithState, setEdges, onEdgesChange] = useEdgesState(edges);
+
+  const onEdgeUpdate = useCallback(
+    (oldEdge, newConnection) =>
+      setEdges((els) => updateEdge(oldEdge, newConnection, els)),
+    []
+  );
+
+  const onConnect = useCallback(
+    (params) => setEdges((els) => addEdge(params, els)),
+    []
+  );
 
   useEffect(() => {
     setNodes((nodesWithState) =>
@@ -21,11 +36,16 @@ function Flow(props) {
             ...node.data,
             label: props.changesToApply.data.label,
           };
+          node.class = props.changesToApply.class;
+          // node.pType = props.changesToApply.pType;
+          // node.enable = props.changesToApply.enable;
         }
 
         return node;
       })
     );
+    console.log(nodesWithState);
+    console.log(edgesWithState);
   }, [props.changesToApply]);
 
   let handleNodeClick = (e, node) => {
@@ -43,8 +63,12 @@ function Flow(props) {
   return (
     <ReactFlow
       nodes={nodesWithState}
-      edges={edges}
+      edges={edgesWithState}
       onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
+      snapToGrid
+      onEdgeUpdate={onEdgeUpdate}
+      onConnect={onConnect}
       onNodeClick={handleNodeClick}
       onPaneClick={handlePaneClick}
       fitView

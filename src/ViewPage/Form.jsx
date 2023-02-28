@@ -15,6 +15,7 @@ function Form(props) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
+        overflow: "auto",
       }}
     >
       {props.nodeInfo.nodeId === "0" ? (
@@ -27,7 +28,10 @@ function Form(props) {
       ) : props.nodeInfo.id.includes("pl") ? (
         "<PipelineForm />"
       ) : (
-        <PhaseForm />
+        <PhaseForm
+          nodeInfo={props.nodeInfo}
+          setChangesToApply={(changes) => props.setChangesToApply(changes)}
+        />
       )}
       <SaveButton />
     </div>

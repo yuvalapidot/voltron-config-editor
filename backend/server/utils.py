@@ -159,6 +159,7 @@ def create_inner_edges(src, target):
     new_edge['target'] = str(target)
     # new_edge['type'] = "step"
     new_edge['animated'] = True
+    new_edge['zIndex'] = 999
     # print(new_edge)
 
     return new_edge
