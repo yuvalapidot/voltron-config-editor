@@ -5,7 +5,7 @@ import ViewPage from "./ViewPage/ViewPage";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App" style={{ height: "100%" }}>
       <Routes>
         <Route path="/" element={<FirstPage />} />
         <Route path="/view" element={<ViewPage />} />
