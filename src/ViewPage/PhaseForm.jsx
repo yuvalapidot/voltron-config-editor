@@ -25,14 +25,12 @@ const types = [
 ];
 
 function PhaseForm(props) {
-  const [phaseName, setPhaseName] = useState(props.nodeInfo.data.label);
+  const [phaseName, setPhaseName] = useState(props.nodeInfo.name);
   const [phaseType, setPhaseType] = useState(props.nodeInfo.pType);
   const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
 
-  const [value, setValue] = React.useState("female");
-
   useEffect(() => {
-    setPhaseName(props.nodeInfo.data.label);
+    setPhaseName(props.nodeInfo.name);
     setPhaseType(props.nodeInfo.pType);
     setEnable(props.nodeInfo.enable);
   }, [props.nodeInfo]);
@@ -52,15 +50,15 @@ function PhaseForm(props) {
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
-      data: { ...props.nodeInfo.data, label: phaseName },
+      data: {
+        ...props.nodeInfo.data,
+        label: phaseName + " - " + phaseType,
+      },
+      pType: phaseType,
       // class: "step_producer." + SPClass,
       // enable: SPEnable,
     });
     // console.log(props.nodeInfo);
-  };
-
-  const handleChange = (event) => {
-    setValue(event.target.value);
   };
 
   return (

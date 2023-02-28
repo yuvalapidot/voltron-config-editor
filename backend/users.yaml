@@ -1,11 +1,11 @@
 - data: Initialization
-  id: pl-4
+  id: pl-37
   phases:
   - data: Ingestion
     extent: parent
     id: '1'
     pType: blocking
-    parentNode: pl-4
+    parentNode: pl-37
     step_producers:
     - class: step_producer.reinvestigation.ReinvestigationStepProducer
       data: Reinvestigation
@@ -34,14 +34,14 @@
       parentNode: '1'
   type: linear
 - data: Expansion Loop
-  id: pl-5
+  id: pl-38
   phases:
   - data: Investigation Timeout
     enable: '{{ENABLE_TIMEOUT_WATCHDOG}}'
     extent: parent
     id: '2'
     pType: watchdog
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.wait_on_state.WaitTimeoutProducer
       data: Wait for Investigation Timeout
@@ -60,7 +60,7 @@
     extent: parent
     id: '3'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.evidence_insertion.EventsBatchInsertionProducer
       data: Event Batch Insertion
@@ -74,7 +74,7 @@
     extent: parent
     id: '4'
     pType: non_blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.knowledge_base.KnowledgeBaseProducer
       data: Knowledge Base
@@ -99,7 +99,7 @@
     extent: parent
     id: '5'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.tis_enrichment.TISStepProducer
       data: TIS Enrichment
@@ -132,7 +132,7 @@
     extent: parent
     id: '6'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.edge_scoring.DynamicEdgeScoringProducer
       data: Dynamic Edge Scoring
@@ -155,7 +155,7 @@
     extent: parent
     id: '7'
     pType: watchdog
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.wait_on_state.WaitReadyForAnalysisProducer
       data: Wait For Analysis
@@ -196,7 +196,7 @@
     extent: parent
     id: '8'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.graph_info.GraphInformationProducer
       data: Graph Information
@@ -208,7 +208,7 @@
     extent: parent
     id: '9'
     pType: non_blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
       data: Write Investigation Results
@@ -261,7 +261,7 @@
     extent: parent
     id: '10'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.stop_investigation.StopInvestigationProducer
       data: Stop Investigation Conditions
@@ -277,7 +277,7 @@
     extent: parent
     id: '11'
     pType: non_blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.udi_expansion.UDIExpansionStepProducer
       data: Udi Expansion
@@ -299,7 +299,7 @@
     extent: parent
     id: '12'
     pType: blocking
-    parentNode: pl-5
+    parentNode: pl-38
     step_producers:
     - class: step_producer.wait_on_state.WaitForEventsProducer
       data: Wait for Events
@@ -313,14 +313,14 @@
       parentNode: '12'
   type: loop
 - data: Completion
-  id: pl-6
+  id: pl-39
   phases:
   - data: Completion Analysis
     enable: '{{ENABLE_COMPLETION_ANALYSIS_PHASE}}'
     extent: parent
     id: '13'
     pType: blocking
-    parentNode: pl-6
+    parentNode: pl-39
     step_producers:
     - class: step_producer.classification.ClassificationProducer
       data: Completion Classification
@@ -352,7 +352,7 @@
     extent: parent
     id: '14'
     pType: blocking
-    parentNode: pl-6
+    parentNode: pl-39
     step_producers:
     - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
       data: Write Final Investigation Results

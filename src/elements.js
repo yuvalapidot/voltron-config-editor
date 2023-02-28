@@ -67,6 +67,8 @@ export function calculatePosition(nestedNodes) {
   //============================
 
   let createStepProducer = (step_producer) => {
+    step_producer.stringType = "step_producer";
+
     step_producer.data = { label: step_producer.data };
     step_producer.position = {
       x: horizonalPositionInPhase,
@@ -100,6 +102,9 @@ export function calculatePosition(nestedNodes) {
     //let numberOfPhases = pipeline.phases.length(); // phases is a list phases dicts
     console.log("in pipeline");
     let numberOfPhases = Object.keys(pipeline.phases).length;
+
+    pipeline.stringType = "pipeline";
+
     pipeline.data = { label: pipeline.data };
     pipeline.position = { x: horizonalPositionPipe, y: verticalPositionPipe };
     pipeline.draggable = false;
@@ -123,6 +128,9 @@ export function calculatePosition(nestedNodes) {
           phase // phase is a dict
         ) => {
           // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
+          phase.name = phase.data;
+          phase.stringType = "phase";
+
           phase.data = { label: phase.data + " - " + phase.pType };
           phase.position = { x: horizonalPosition, y: verticalPosition };
           horizonalPosition += spacer;
@@ -273,6 +281,9 @@ export function calculatePosition(nestedNodes) {
           }
 
           // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
+          phase.name = phase.data;
+          phase.stringType = "phase";
+
           phase.data = { label: phase.data + " - " + phase.pType };
           let border = getBorder(phase.pType);
           phase["style"] = {

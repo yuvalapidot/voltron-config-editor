@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
-import { Grid } from "@mui/material";
 import StepProducerForm from "./StepProducerForm";
 import PhaseForm from "./PhaseForm";
-import PipelineForm from "./PipelineForm";
 import SaveButton from "./SaveButton";
 
 function Form(props) {
+  console.log(props.nodeInfo.id);
   return (
     <div
       style={{
@@ -20,19 +17,19 @@ function Form(props) {
     >
       {props.nodeInfo.nodeId === "0" ? (
         "Create a new pipeline"
-      ) : props.nodeInfo.id.includes(".") ? (
+      ) : props.nodeInfo.stringType === "step_producer" ? (
         <StepProducerForm
           nodeInfo={props.nodeInfo}
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
-      ) : props.nodeInfo.id.includes("pl") ? (
+      ) : props.nodeInfo.stringType === "pipeline" ? (
         "<PipelineForm />"
-      ) : (
+      ) : props.nodeInfo.stringType === "phase" ? (
         <PhaseForm
           nodeInfo={props.nodeInfo}
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
-      )}
+      ) : null}
       <SaveButton />
     </div>
   );

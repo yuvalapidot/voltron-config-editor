@@ -37,7 +37,11 @@ function Flow(props) {
             label: props.changesToApply.data.label,
           };
           node.class = props.changesToApply.class;
-          // node.pType = props.changesToApply.pType;
+          //check if its a phase
+          if (node.stringType === "phase") {
+            node.pType = props.changesToApply.pType;
+            console.log(props.changesToApply.pType);
+          }
           // node.enable = props.changesToApply.enable;
         }
 
