@@ -1,7 +1,7 @@
 how to run this application:
 
 run the backend:
-nevigate to backend directory (...\starship\backend) and type the following command: "python server.py"
+  - nevigate to backend directory (...\starship\backend) and type the following command: "python server.py"
 
 run the frontend: 
   - install npm from the following link: https://www.npmjs.com/ 
