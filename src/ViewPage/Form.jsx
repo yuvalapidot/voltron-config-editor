@@ -30,7 +30,7 @@ function Form(props) {
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
       ) : null}
-      <SaveButton />
+      <SaveButton nodesWithState = {props.nodesWithState}/>
     </div>
   );
 }

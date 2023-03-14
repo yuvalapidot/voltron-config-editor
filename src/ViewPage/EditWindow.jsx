@@ -14,6 +14,7 @@ function EditWindow(props) {
         <Form
           nodeInfo={props.nodeInfo}
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
+          nodesWithState = {props.nodesWithState}
         />
       ) : null}
     </div>

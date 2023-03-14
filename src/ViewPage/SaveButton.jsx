@@ -3,8 +3,12 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 
 function SaveButton(props) {
+  console.log("from SaveButton: ")
+  console.log(props.nodesWithState)
   return (
-    <Button variant="outlined" style={buttonStyle}>
+    <Button variant="outlined" style={buttonStyle} 
+    onClick={()=>{console.log("from SaveButton: ")
+    console.log(props.nodesWithState)}}>
       Save
       <SaveIcon />
     </Button>
