@@ -1,7 +1,9 @@
 How to run this application:
 
 Make sure to install flask and yaml first.
+
 pip install pyyaml
+
 pip install flask
 
 Run the backend:
