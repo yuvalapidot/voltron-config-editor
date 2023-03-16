@@ -9,7 +9,7 @@ import ReactFlow, {
   addEdge,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { nodes, edges } from "../elements";
+import { nodes, edges } from "../../../elements";
 
 function Flow(props) {
   

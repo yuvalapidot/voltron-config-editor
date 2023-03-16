@@ -1,7 +1,7 @@
 import "./App.scss";
 import { Route, Routes } from "react-router-dom";
-import FirstPage from "./FirstPage";
-import ViewPage from "./ViewPage/ViewPage";
+import FirstPage from "./components/pages/FirstPage/FirstPage";
+import ViewPage from "./components/pages/ViewPage/ViewPage";
 
 function App() {
   return (

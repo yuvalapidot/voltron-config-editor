@@ -1,6 +1,6 @@
 import React from "react";
-import FileUpload from "./FileUpload/FileUpload";
-import logo from "./assets/VEC-UI.png";
+import FileUpload from "../../FileUpload/FileUpload";
+import logo from "../../../assets/VEC-UI.png";
 import "./FirstPage.scss";
 
 function FirstPage() {

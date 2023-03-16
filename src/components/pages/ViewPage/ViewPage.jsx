@@ -5,7 +5,7 @@ import EditWindow from "./EditWindow";
 import ReactFlow, {
   useNodesState,
 } from "reactflow";
-import { nodes} from "../elements";
+import { nodes} from "../../../elements";
 
 function ViewPage() {
   const  [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
