@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Flow from "./Flow";
 import "./ViewPage.scss";
-import EditWindow from "./EditWindow";
+import EditWindow from "./Edit/EditWindow";
 import ReactFlow, {
   useNodesState,
 } from "reactflow";

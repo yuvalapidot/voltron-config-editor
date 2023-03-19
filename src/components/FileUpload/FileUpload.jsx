@@ -1,10 +1,11 @@
-import React from "react";
+import React from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
 import { nodes, calculatePosition, setNodes, setEdges } from "../../elements";
 import { flatten } from "../../elements";
+import yaml from "js-yaml";
 
 const FileUpload = () => {
   const navigate = useNavigate();

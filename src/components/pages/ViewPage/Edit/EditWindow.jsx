@@ -1,8 +1,8 @@
 import React from "react";
-import "./ViewPage.scss";
+import "../ViewPage.scss";
 import { useState } from "react";
 import EditButton from "./EditButton";
-import Form from "./Form";
+import Form from "../Form";
 
 function EditWindow(props) {
   let [editorStyle, setEditorStyle] = useState(editorStyleClosed);

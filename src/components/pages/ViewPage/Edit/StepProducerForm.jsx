@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Grid, List, ListItem, ListItemText } from "@mui/material";
 // import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import config from "../../../config";
+import config from "../../../../config";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
