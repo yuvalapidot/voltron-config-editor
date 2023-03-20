@@ -3,6 +3,7 @@ import StepProducerForm from "./StepProducerForm";
 import PhaseForm from "./PhaseForm";
 import SaveButton from "./SaveButton";
 
+// 3 types of form: pipeline/step_producer/phase. Show the relevant in the form
 function Form(props) {
   console.log(props.nodeInfo.id);
   return (
@@ -15,8 +16,8 @@ function Form(props) {
         overflow: "auto",
       }}
     >
-      {props.nodeInfo.nodeId === "0" ? (
-        "Create a new pipeline"
+      {props.nodeInfo.nodeId === "0" ? ( // White canvas
+        "Create a new pipeline" // ToDo: complete create new pipeline
       ) : props.nodeInfo.stringType === "step_producer" ? (
         <StepProducerForm
           nodeInfo={props.nodeInfo}
@@ -30,7 +31,7 @@ function Form(props) {
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
       ) : null}
-      <SaveButton nodesWithState = {props.nodesWithState}/>
+      <SaveButton nodesWithState={props.nodesWithState} />
     </div>
   );
 }

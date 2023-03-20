@@ -6,8 +6,9 @@ export let nodes = [];
 export let edges = [];
 export let nodesToBackend = []; // this version is nested and will be updated according to the ui changes
 
+// Decorate nodes in the UI + Calculate positions in the UI
 export async function setNodes(nestedNodes) {
-  nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
+  nodesToBackend = JSON.parse(JSON.stringify(nestedNodes)); // Save the first struction of the file - not working yet
   nodes = calculatePosition(nestedNodes);
   console.log(nodes);
   //test:
@@ -23,6 +24,7 @@ export async function setNodes(nestedNodes) {
   console.log(response);
 }
 
+// Decorate edges in the UI
 export function setEdges(edgesFromBackend) {
   edges = edgesFromBackend;
   edges.map((edge) => {
@@ -36,7 +38,7 @@ export function setEdges(edgesFromBackend) {
   });
 }
 
-// position calculators:
+// Position calculators for the objects based on the object amount etc. Flaten the data from the file
 export function calculatePosition(nestedNodes) {
   //======= varieables =========
   let nodesAccumulator = [];
@@ -64,7 +66,8 @@ export function calculatePosition(nestedNodes) {
   let verticalPositionInPhase = 40;
   let spacerInPhase = 60;
 
-  //============================
+  //============================ Calculate the location in the UI of every step producer and its nodes + edges.
+  //============================ Convert information of every step producer and its nodes + edges from YAML to the UI objects.
 
   let createStepProducer = (step_producer) => {
     step_producer.stringType = "step_producer";
@@ -79,8 +82,8 @@ export function calculatePosition(nestedNodes) {
       height: 49,
       backgroundColor: "rgba(255, 255, 255, 0.6)",
     };
-    step_producer["targetPosition"] = "left";
-    step_producer["sourcePosition"] = "bottom";
+    step_producer["targetPosition"] = "left"; // Source - From where the edge is coming out
+    step_producer["sourcePosition"] = "bottom"; // Target - To where the edge is heading
     // delete step_producer["type"];
     verticalPositionInPhase += spacerInPhase;
     nodesAccumulator.push(step_producer);
