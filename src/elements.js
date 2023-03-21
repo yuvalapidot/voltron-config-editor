@@ -6,12 +6,12 @@ export let nodes = [];
 export let edges = [];
 export let nodesToBackend = []; // this version is nested and will be updated according to the ui changes
 
-export async function setNodes(nestedNodes) {
+export  function setNodes(nestedNodes) {
   nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
   nodes = calculatePosition(nestedNodes);
   console.log(nodes);
   //test:
-  let response = await fetch("/save", {
+  /*let response = await fetch("/save", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -19,8 +19,7 @@ export async function setNodes(nestedNodes) {
     body: JSON.stringify({
       yamlContent: JSON.stringify(nodesToBackend),
     }),
-  });
-  console.log(response);
+  });*/
 }
 
 export function setEdges(edgesFromBackend) {

@@ -5,40 +5,42 @@ import "./FileUpload.scss";
 import { useNavigate } from "react-router-dom";
 import { nodes, calculatePosition, setNodes, setEdges } from "../../elements";
 import { flatten } from "../../elements";
+import { yamlToDict, createElements} from "../../BackToFrontFunc";
 import yaml from "js-yaml";
+
 
 const FileUpload = () => {
   const navigate = useNavigate();
 
-  const uploadHandler = async (e) => {
-    // get the file from the event
+  const uploadHandler = (e) => {
     const file = e.target.files[0];
-
+    
     if (file != null) {
-      // wrap the uploaded file with formdata object we can send via post request
-      const data = new FormData();
-      data.append("file_from_react", file);
+      const reader = new FileReader();
+      reader.onload  = () => {
+        
+        try {
+          //const data = yaml.load(reader.result); // parse YAML into JS object
+          const initialDict = yamlToDict(reader.result);
+          const elementDict = createElements(initialDict)
+          console.log(elementDict);
+          console.log("im in");
+          setNodes(elementDict.nodes);
+          setEdges(elementDict.edges);
+          navigate("/view");
+  
 
-      // send the formdata with fetch
-      let response = await fetch("/upload", {
-        method: "post",
-        body: data,
-      });
-
-      // wait for response and make a json out of it
-      let res = await response.json();
-
-      // validate the response
-      if (res.response == 0) {
-        alert("Error uploading file");
-      } else {
-        // console.log(res.response.nodes);
-        setNodes(res.response.nodes);
-        setEdges(res.response.edges);
-        navigate("/view");
-      }
+        } catch (err) {
+          console.log("not working")
+          console.error(err);
+          alert("Error parsing file");
+        }
+      };
+      reader.readAsText(file);
+      
     }
   };
+  
 
   return (
     <>
