@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Flow from "./Flow";
 import "./ViewPage.scss";
 import EditWindow from "./EditWindow";
-import ReactFlow, { useNodesState } from "reactflow";
-import { nodes } from "../elements";
+import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
+import { nodes, edges } from "../elements";
 
 // ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
 function ViewPage() {
@@ -16,6 +16,9 @@ function ViewPage() {
   });
   // State 3 - changesToApply: Which changes I want to update for that node in the Edit Window
   let [changesToApply, setChangesToApply] = useState({});
+
+  // State edgesWithState: make the calculated edges of elements into state
+  // const [edgesWithState, setEdges, onEdgesChange] = useEdgesState(edges);
 
   // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
   useEffect(() => {
@@ -50,6 +53,7 @@ function ViewPage() {
         setChangesToApply={(changes) => setChangesToApply(changes)}
         nodeInfo={clickedNodeInfo}
         nodesWithState={nodesWithState}
+        // edgesWithState={edgesWithState}
       />
       <div
         className="flow-conteiner"
@@ -62,6 +66,9 @@ function ViewPage() {
           nodesWithState={nodesWithState}
           setNodes={(n) => setNodes(n)}
           onNodesChange={(n) => onNodesChange(n)}
+          // edgesWithState={edgesWithState}
+          // setEdges={(e) => setEdges(e)}
+          // onEdgesChange={(e) => onEdgesChange(e)}
         />
       </div>
     </div>
