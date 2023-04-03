@@ -23,11 +23,11 @@ function EditWindow(props) {
 }
 
 export let editorStyleOpen = {
-  height: "90vh",
+  height: "92vh",
   width: "80vh",
   display: "flex",
   flexDirection: "row-reverse",
-  marginRight: "2vh",
+  marginRight: "1vh",
   backgroundColor: "white",
   border: "3px solid #f8fafb",
   boxShadow: "0px 8px 24px rgba(149, 157, 165, 0.5)",
@@ -37,7 +37,7 @@ export let editorStyleClosed = {
   height: "90vh",
   display: "flex",
   flexDirection: "row-reverse",
-  marginRight: "2vh",
+  marginRight: "1vh",
 };
 
 export default EditWindow;

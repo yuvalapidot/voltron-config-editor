@@ -55,10 +55,7 @@ function ViewPage() {
         nodesWithState={nodesWithState}
         // edgesWithState={edgesWithState}
       />
-      <div
-        className="flow-conteiner"
-        style={{ height: "90vh", width: "200vh" }}
-      >
+      <div className="flow-conteiner">
         {/* Get the clicked node object from the Flow to apply changes on */}
         <Flow
           changesToApply={changesToApply}
