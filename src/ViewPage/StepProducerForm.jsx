@@ -51,7 +51,7 @@ function StepProducerForm(props) {
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
-      data: { ...props.nodeInfo.data, label: SPName },
+      data: { ...props.nodeInfo.data, label: SPName }, // ... = {example: "1", {example2: "2"}} -> {example: "1",example2: "2"} as Json
       class: "step_producer." + SPClass,
       // enable: SPEnable,
     });

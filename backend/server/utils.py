@@ -13,8 +13,8 @@ sp_id = 0.1  # Step producer ID counter
 def yaml_to_dict(data):
     return dict(yaml.load(data, Loader=BaseLoader))
 
-
-def create_elements(data):
+# Creating the elements of the yaml objects into nodes and edges
+def create_elements(data): 
     initial_elements = {'nodes': [], 'edges': []}
     yaml_pipelines = data['pipeline']
     pipelines, inner_edges = create_pipelines(yaml_pipelines)
@@ -26,7 +26,7 @@ def create_elements(data):
     phase_id = 1
     return initial_elements
 
-
+# Create pipeline and its fields from the yaml file
 def create_pipelines(yaml_pipelines):
     pipelines = []
     inner_edges = []
@@ -47,7 +47,7 @@ def create_pipelines(yaml_pipelines):
         pipline_id += 1
     return pipelines, inner_edges
 
-
+# Create phase and its fields from the yaml file
 def create_phases(yaml_phases, type):
     pl_phases = []
     pl_inner_edges = []
@@ -81,7 +81,7 @@ def create_phases(yaml_phases, type):
         phase_node = {}
     return pl_phases, pl_inner_edges
 
-
+# Create step_producers and its fields from the yaml file
 def create_step_producers(producers_list):
     phase_step_producers = []
     inner_edges = []
@@ -123,7 +123,7 @@ def create_step_producers(producers_list):
     return phase_step_producers, inner_edges
 
 
-# handle edges
+# Create edges between phases
 def create_edges(pipelines):
     # print(pipelines)
     edges = []
@@ -150,8 +150,8 @@ def create_edges(pipelines):
     return edges
     # print(edges)
 
-
-# a function that creates the edge of the step producer DAG
+# Inner edges between step_producers to know the order of the step_producers (run after)
+# Function that creates the edge of the step producer DAG
 def create_inner_edges(src, target):
     new_edge = {}
     new_edge['id'] = 'e' + str(src) + '-' + str(target)

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { nodes, calculatePosition, setNodes, setEdges } from "../elements";
 import { flatten } from "../elements";
 
+// Here we call the backend functions to arrange the yaml functions and create the objects
 const FileUpload = () => {
   const navigate = useNavigate();
 
@@ -14,11 +15,11 @@ const FileUpload = () => {
     const file = e.target.files[0];
 
     if (file != null) {
-      // wrap the uploaded file with formdata object we can send via post request
+      // wrap the uploaded file with FormData object we can send via post request
       const data = new FormData();
       data.append("file_from_react", file);
 
-      // send the formdata with fetch
+      // send the FormData with fetch
       let response = await fetch("/upload", {
         method: "post",
         body: data,
@@ -32,6 +33,7 @@ const FileUpload = () => {
         alert("Error uploading file");
       } else {
         // console.log(res.response.nodes);
+        // Set nodes and edges and move to the ViewPage
         setNodes(res.response.nodes);
         setEdges(res.response.edges);
         navigate("/view");
