@@ -1,23 +1,12 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# npm
+node_modules/
+package-lock.json
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
-# production
-/build
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+# TODO: the following two ignores should be eventually removed:
+# TODO: venv should be already removed once server architecture is removed
+# venv
+*/venv/
+*/__pycache__/
+# TODO: Editor should save files in a given path, not in this directory, so the ignore is redundant, make sure to not commit such files.
+# output
+*/users.yaml
