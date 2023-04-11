@@ -10,17 +10,7 @@ export  function setNodes(nestedNodes) {
   nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
   nodes = calculatePosition(nestedNodes);
   console.log(nodes);
-  //test:
-  /*let response = await fetch("/save", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      yamlContent: JSON.stringify(nodesToBackend),
-    }),
-  });*/
-}
+  }
 
 export function setEdges(edgesFromBackend) {
   edges = edgesFromBackend;
