@@ -10,11 +10,12 @@ function EditWindow(props) {
   return (
     <div style={editorStyle}>
       <EditButton onClick={(newState) => setEditorStyle(newState)} />
+      {/* If editor window is open show me the clickedNode info and the changesToApply */}
       {editorStyle === editorStyleOpen ? (
         <Form
           nodeInfo={props.nodeInfo}
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
-          nodesWithState = {props.nodesWithState}
+          nodesWithState={props.nodesWithState}
         />
       ) : null}
     </div>

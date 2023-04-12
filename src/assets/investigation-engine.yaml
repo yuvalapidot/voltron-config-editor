@@ -1,6 +1,6 @@
 name: Investigation
 
-common:
+common: # Previous team did not handle this section
   udi:
     class: cp4s.udi.udi_helper.UDIHelper
     parameters:
@@ -93,7 +93,7 @@ common:
         eliminate_dup_case_findings: "{{EXCLUDE_CASE_FINDINGS_DUPLICATES_IN_RESPONSES}}"
         max_events: "{{MAX_RESPONSE_EVENTS}}"
 
-state:
+state: # Previous team did not handle this section
   class: graph.forensic_graph.ForensicGraph
   parameters:
     default_context:
