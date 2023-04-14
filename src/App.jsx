@@ -1,11 +1,28 @@
 import "./App.scss";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import FirstPage from "./FirstPage";
 import ViewPage from "./ViewPage/ViewPage";
+import ToolBar from "./ToolBar";
+import { useEffect } from "react";
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === "F5") {
+        navigate("/");
+        event.stopPropagation();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [navigate]);
   return (
     <div className="App" style={{ height: "100%" }}>
+      <ToolBar />
       <Routes>
         <Route path="/" element={<FirstPage />} />
         <Route path="/view" element={<ViewPage />} />
