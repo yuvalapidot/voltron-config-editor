@@ -12,9 +12,12 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
-import { setNodes, setEdges } from "./elements";
+import { nodes, calculatePosition, setNodes, setEdges } from "./elements";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { flatten } from "./elements";
+import { yamlToDict, createElements} from "./BackToFrontFunc";
+import yaml from "js-yaml";
 
 const ToolBar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -44,29 +47,28 @@ const ToolBar = () => {
       const file = e.target.files[0];
 
       if (file != null) {
-        // wrap the uploaded file with FormData object we can send via post request
-        const data = new FormData();
-        data.append("file_from_react", file);
-
-        // send the FormData with fetch
-        let response = await fetch("/upload", {
-          method: "post",
-          body: data,
-        });
-
-        // wait for response and make a json out of it
-        let res = await response.json();
-
-        // validate the response
-        if (res.response === 0) {
-          alert("Error uploading file");
-        } else {
-          // Set nodes and edges and move to the ViewPage
-          setNodes(res.response.nodes);
-          setEdges(res.response.edges);
-          setAnchorEl(null);
-          navigate("/view");
-        }
+        const reader = new FileReader();
+        reader.onload  = () => {
+          
+          try {
+            //const data = yaml.load(reader.result); // parse YAML into JS object
+            const initialDict = yamlToDict(reader.result);
+            const elementDict = createElements(initialDict)
+            console.log(elementDict);
+            console.log("im in");
+            setNodes(elementDict.nodes);
+            setEdges(elementDict.edges);
+            navigate("/view");
+    
+  
+          } catch (err) {
+            console.log("not working")
+            console.error(err);
+            alert("Error parsing file");
+          }
+        };
+        reader.readAsText(file);
+        
       }
     });
 
