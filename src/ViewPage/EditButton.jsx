@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@mui/material";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { editorStyleOpen, editorStyleClosed } from "./EditWindow";
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from "@mui/icons-material/Edit";
 
 let editorIsClosed = true;
 
@@ -22,13 +22,18 @@ function EditButton(props) {
 
   return (
     <Button variant="contained" style={buttonStyle} onClick={handleClick}>
-      {buttonText}<EditIcon/>
+      <div>
+        {buttonText}
+        <br />
+      </div>
+      <EditIcon />
     </Button>
   );
 }
 
 let buttonStyle = {
   alignSelf: "center",
+  display: "inline-block",
   padding: "1.5em 1em 1.5em 1em",
 };
 
