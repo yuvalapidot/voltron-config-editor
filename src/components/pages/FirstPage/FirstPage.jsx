@@ -1,15 +1,18 @@
 import React from "react";
-import FileUpload from "../../FileUpload/FileUpload";
-import logo from "../../../assets/VEC-UI.png";
+import ViewPage from "../ViewPage/ViewPage";
 import "./FirstPage.scss";
-
+import "../ViewPage/ViewPage.scss";
 function FirstPage() {
   return (
     <>
-      <div className="container">
-        {/* <div className="title">Upload file</div> */}
+      {/* <div className="container">
         <img className="logo" src={logo} alt="Logo" />
         <FileUpload />
+      </div> */}
+      <div className="window-conteiner">
+        <ViewPage
+          nodes = {[]}
+        />
       </div>
     </>
   );
