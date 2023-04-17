@@ -1,8 +1,7 @@
 import React from "react";
-import ViewPage from "./ViewPage/ViewPage";
+import ViewPage from "../ViewPage/ViewPage";
 import "./FirstPage.scss";
-import "./ViewPage/ViewPage.scss";
-
+import "../ViewPage/ViewPage.scss";
 function FirstPage() {
   return (
     <>

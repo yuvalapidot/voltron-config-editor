@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import StepProducerForm from "./StepProducerForm";
-import PhaseForm from "./PhaseForm";
-import SaveButton from "./SaveButton";
+import StepProducerForm from "./Edit/StepProducerForm";
+import PhaseForm from "./Edit/PhaseForm";
+import SaveButton from "./Edit/SaveButton";
 
 // 3 types of form: pipeline/step_producer/phase. Show the relevant in the form
 function Form(props) {

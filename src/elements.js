@@ -6,23 +6,11 @@ export let nodes = [];
 export let edges = [];
 export let nodesToBackend = []; // this version is nested and will be updated according to the ui changes
 
-// Decorate nodes in the UI + Calculate positions in the UI
-export async function setNodes(nestedNodes) {
-  nodesToBackend = JSON.parse(JSON.stringify(nestedNodes)); // Save the first struction of the file - not working yet
+export  function setNodes(nestedNodes) {
+  nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
   nodes = calculatePosition(nestedNodes);
   console.log(nodes);
-  //test:
-  let response = await fetch("/save", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      yamlContent: JSON.stringify(nodesToBackend),
-    }),
-  });
-  console.log(response);
-}
+  }
 
 // Decorate edges in the UI
 export function setEdges(edgesFromBackend) {
