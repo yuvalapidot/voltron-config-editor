@@ -31,10 +31,6 @@ const ToolBar = () => {
     setAnchorEl(null);
   };
 
-  const handleSave = () => {
-    // handle menu item click
-  };
-
   // Here we call the backend functions to arrange the yaml functions and create the objects
   const uploadHandler = async () => {
     // create a hidden file input element
@@ -51,11 +47,11 @@ const ToolBar = () => {
         reader.onload  = () => {
           
           try {
-            //const data = yaml.load(reader.result); // parse YAML into JS object
-            const initialDict = yamlToDict(reader.result);
-            const elementDict = createElements(initialDict)
+            //const data = yaml.load(reader.result); 
+            const initialDict = yamlToDict(reader.result);  // parse YAML into JS object
+            console.log(initialDict);
+            const elementDict = createElements(initialDict);
             console.log(elementDict);
-            console.log("im in");
             setNodes(elementDict.nodes);
             setEdges(elementDict.edges);
             navigate("/view");
@@ -68,13 +64,67 @@ const ToolBar = () => {
           }
         };
         reader.readAsText(file);
-        
       }
     });
 
     // simulate a click on the file input element to display the file input dialog
     fileInput.click();
   };
+  
+  const saveHandler = () => {
+      // const fileContent = "---\n"; // This is the content of the YAML file
+
+      const config = {
+        pipeline: [
+          {
+            name: "Initialization",
+            type: "linear",
+            phases: [
+              {
+                name: "Ingestion",
+                type: "blocking",
+                producers: [
+                  {
+                    class: "step_producer.reinvestigation.ReinvestigationStepProducer",
+                    name: "Reinvestigation",
+                    enable: "{{ENABLE_REINVESTIGATION}}",
+                    parameters: {
+                      reinvestigation_api: "{{reinvestigation_api}}",
+                      state_pickle: "{{STATE_PICKLE_FILE}}",
+                      input_key: "{{INPUT_STATE_KEY}}",
+                      exclude_keys: "{{STATE_EXCLUDE_KEYS}}"
+                    }
+                  },
+                  {
+                    class: "step_producer.investigation_input.InvestigationInputStepProducer",
+                    name: "Investigation Input",
+                    enable: "{{ENABLE_INGESTION_PRODUCER}}",
+                    parameters: {
+                      input_findings: "{{FINDINGS}}",
+                      input_observed_data: "{{OBSERVED_DATA}}",
+                      input_pattern: "{{STIX_PATTERN}}",
+                      udi: "{{udi}}",
+                      window_start: "{{start_ts}}",
+                      window_end: "{{stop_ts}}",
+                      max_trigger_events: "{{MAX_TRIGGER_EVENTS}}"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }; // This is the configuration object to be converted to YAML
+  
+      const yamlContent = yaml.dump(config); // Convert object to YAML
+      const fileName = "voltron.yaml"; // This is the name of the file
+  
+      const element = document.createElement("a");
+      const file = new Blob([yamlContent], {type: 'text/yaml'});
+      element.href = URL.createObjectURL(file);
+      element.download = fileName;
+      element.click();
+    };
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -126,7 +176,7 @@ const ToolBar = () => {
                   marginBottom: "5px",
                   marginLeft: "5px",
                 }}
-                onClick={handleClose}
+                onClick={saveHandler}
               >
                 <SaveIcon />
                 Save

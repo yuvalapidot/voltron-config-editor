@@ -32,14 +32,14 @@ function ViewPage() {
           //check if its a phase
           if (node.stringType === "phase") {
             node.pType = changesToApply.pType;
-            console.log(changesToApply.pType);
+            // console.log(changesToApply.pType);
           }
           // node.enable = props.changesToApply.enable;
         }
-
         return node;
       })
-    );
+      );
+      // console.log(node);
     console.log(nodesWithState);
   }, [changesToApply]);
 
