@@ -43,10 +43,11 @@ function PipelineForm(props) {
       ...props.nodeInfo,
       data: {
         ...props.nodeInfo.data,
-        label: piplineName + " - " + piplineType,
+        label: piplineName 
       },
-      pType: piplineType,
+      type: piplineType,
           });
+          console.log("clicked apply changes", props.nodeInfo)
      };
 
   return (
@@ -72,9 +73,9 @@ function PipelineForm(props) {
           <Grid xs={10} item>
             <TextField
               id="outlined-basic"
-              label="Type:"
+              label="type:"
               select
-              defaultValue={piplineType}
+              value={piplineType}
               margin="normal"
               variant="outlined"
               onChange={handlePiplineTypeChange}

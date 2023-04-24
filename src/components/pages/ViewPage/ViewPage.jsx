@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import Flow from "./Flow";
 import "./ViewPage.scss";
 import EditWindow from "./Edit/EditWindow";
-import ReactFlow, { useNodesState, useEdgesState} from "reactflow";
-import { nodes} from "../../../elements";
+import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
+import { nodes } from "../../../elements";
 
 // ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
 function ViewPage() {
@@ -29,10 +29,18 @@ function ViewPage() {
             label: changesToApply.data.label,
           };
           node.class = changesToApply.class;
+
           //check if its a phase
-          if (node.stringType === "phase") {
+          if (node.stringType == "phase") {
+            node.data.label = changesToApply.data.label
             node.pType = changesToApply.pType;
+            node.selected = changesToApply.selected
             console.log(changesToApply.pType);
+          }
+
+          if (node.stringType == "pipline") {
+            node.type = changesToApply.type;
+            console.log(changesToApply.type);
           }
           // node.enable = props.changesToApply.enable;
         }

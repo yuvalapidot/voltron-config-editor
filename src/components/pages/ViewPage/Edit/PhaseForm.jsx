@@ -33,6 +33,7 @@ function PhaseForm(props) {
     setPhaseName(props.nodeInfo.name);
     setPhaseType(props.nodeInfo.pType);
     setEnable(props.nodeInfo.enable);
+    console.log(props.nodeInfo);
   }, [props.nodeInfo]);
 
   const handlePhaseNameChange = (event) => {
@@ -58,7 +59,7 @@ function PhaseForm(props) {
       // class: "step_producer." + SPClass,
       // enable: SPEnable,
     });
-    // console.log(props.nodeInfo);
+     
   };
 
   return (

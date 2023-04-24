@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState} from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -14,6 +14,7 @@ import { nodes, edges } from "../../../elements";
 function Flow(props) {
   
   const [edgesWithState, setEdges, onEdgesChange] = useEdgesState(edges);
+  const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
 
   const onEdgeUpdate = useCallback(
     (oldEdge, newConnection) =>
@@ -26,9 +27,11 @@ function Flow(props) {
     []
   );
 
-  let handleNodeClick = (e, node) => {
+ let handleNodeClick = (e, node) => {
     // props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
     props.updateNodeId(node);
+    
+     // setFlowTransform({ ...flowTransform, zoom: newZoom});
   };
 
   let handlePaneClick = (e) => {
@@ -39,7 +42,7 @@ function Flow(props) {
   };
 
   return (
-    <ReactFlow
+    <ReactFlow 
       nodes={props.nodesWithState}
       edges={edgesWithState}
       onNodesChange={props.onNodesChange}
@@ -49,6 +52,9 @@ function Flow(props) {
       onConnect={onConnect}
       onNodeClick={handleNodeClick}
       onPaneClick={handlePaneClick}
+      style={{ width: '100%', height: '100%' }}
+      transform={flowTransform}
+
       fitView
     >
       <Background />
