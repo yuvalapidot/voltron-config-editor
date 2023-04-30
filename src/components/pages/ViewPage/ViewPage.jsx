@@ -21,26 +21,26 @@ function ViewPage() {
   useEffect(() => {
     setNodes((nodesWithState) =>
       nodesWithState.map((node) => {
-        if (node.id === changesToApply.id) {
+        if (node.id == changesToApply.id) {
           // it's important that you create a new object here
           // in order to notify react flow about the change
+          //this new object responsible for editing the step producer
           node.data = {
             ...node.data,
             label: changesToApply.data.label,
           };
           node.class = changesToApply.class;
-
           //check if its a phase
           if (node.stringType == "phase") {
             node.data.label = changesToApply.data.label
+            node.name = changesToApply.data.label
             node.pType = changesToApply.pType;
-            node.selected = changesToApply.selected
+            //node.selected = changesToApply.enable
             console.log(changesToApply.pType);
           }
-
-          if (node.stringType == "pipline") {
+          //check if its a pipline
+          if (node.stringType == "pipeline") {
             node.type = changesToApply.type;
-            console.log(changesToApply.type);
           }
           // node.enable = props.changesToApply.enable;
         }
@@ -48,7 +48,7 @@ function ViewPage() {
         return node;
       })
     );
-    console.log(nodesWithState);
+    //console.log(nodesWithState);
   }, [changesToApply]);
 
   return (

@@ -25,12 +25,12 @@ const types = [
 ];
 
 function PhaseForm(props) {
-  const [phaseName, setPhaseName] = useState(props.nodeInfo.name);
+  const [phaseName, setPhaseName] = useState(props.nodeInfo.data.label);
   const [phaseType, setPhaseType] = useState(props.nodeInfo.pType);
   const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
 
   useEffect(() => {
-    setPhaseName(props.nodeInfo.name);
+    setPhaseName(props.nodeInfo.data.label);
     setPhaseType(props.nodeInfo.pType);
     setEnable(props.nodeInfo.enable);
     console.log(props.nodeInfo);
@@ -48,18 +48,18 @@ function PhaseForm(props) {
     setEnable(event.target.value);
   };
 
+  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
       data: {
         ...props.nodeInfo.data,
-        label: phaseName + " - " + phaseType,
+        label: phaseName,
       },
       pType: phaseType,
-      // class: "step_producer." + SPClass,
-      // enable: SPEnable,
+      selected: SPEnable,
     });
-     
+
   };
 
   return (
@@ -108,8 +108,8 @@ function PhaseForm(props) {
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
-                // value={SPEnable}
                 defaultValue="true"
+                // value={SPEnable}
                 onChange={handleEnableChange}
               >
                 <FormControlLabel
