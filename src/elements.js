@@ -78,7 +78,7 @@ export function calculatePosition(nestedNodes) {
   };
 
   let getBorder = (phaseType) => {
-    console.log(phaseType);
+    // console.log(phaseType);
     if (phaseType === "blocking") {
       return "2px solid";
     } else if (phaseType === "watchdog") {
@@ -91,7 +91,7 @@ export function calculatePosition(nestedNodes) {
   nestedNodes.forEach((pipeline) => {
     // pipeline is a dict contins also the phases list
     //let numberOfPhases = pipeline.phases.length(); // phases is a list phases dicts
-    console.log("in pipeline");
+    // console.log("in pipeline");
     let numberOfPhases = Object.keys(pipeline.phases).length;
 
     pipeline.stringType = "pipeline";
