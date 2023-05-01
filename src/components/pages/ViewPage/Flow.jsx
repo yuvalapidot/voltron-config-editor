@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState} from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -7,15 +7,17 @@ import ReactFlow, {
   useEdgesState,
   updateEdge,
   addEdge,
+  useReactFlow,
+  ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
 import { nodes, edges } from "../../../elements";
 
 function Flow(props) {
-  
+
   const [edgesWithState, setEdges, onEdgesChange] = useEdgesState(edges);
   const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
-
+  const {setCenter} = useReactFlow();
   const onEdgeUpdate = useCallback(
     (oldEdge, newConnection) =>
       setEdges((els) => updateEdge(oldEdge, newConnection, els)),
@@ -27,13 +29,18 @@ function Flow(props) {
     []
   );
 
- let handleNodeClick = (e, node) => {
-    // props.updateNodeId({ nodeId: node.id, nodeName: node.data.label });
+  let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
-    
-     // setFlowTransform({ ...flowTransform, zoom: newZoom});
+    focusNode(node);
   };
 
+  const focusNode = (node) => {
+    const x = node.positionAbsolute.x + node.width / 2;
+      const y = node.positionAbsolute.y + node.height / 2;
+      const zoom = 1.85;
+
+      setCenter(x, y, { zoom, duration: 1000 });
+  }
   let handlePaneClick = (e) => {
     props.updateNodeId({
       nodeId: "0",
@@ -42,7 +49,7 @@ function Flow(props) {
   };
 
   return (
-    <ReactFlow 
+    <ReactFlow
       nodes={props.nodesWithState}
       edges={edgesWithState}
       onNodesChange={props.onNodesChange}
@@ -63,5 +70,11 @@ function Flow(props) {
     </ReactFlow>
   );
 }
-
-export default Flow;
+function FlowWithProvider(props) {
+  return (
+    <ReactFlowProvider>
+      <Flow {...props} />
+    </ReactFlowProvider>
+  );
+}
+export default FlowWithProvider;
