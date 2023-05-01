@@ -48,6 +48,7 @@ function StepProducerForm(props) {
 
   // console.log(props.nodeInfo);
 
+  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
@@ -55,7 +56,6 @@ function StepProducerForm(props) {
       class: "step_producer." + SPClass,
       // enable: SPEnable,
     });
-    // console.log(props.nodeInfo);
   };
 
   const handleChange = (e, i) => {

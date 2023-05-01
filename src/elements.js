@@ -300,7 +300,7 @@ export function calculatePosition(nestedNodes) {
       horizonalPosition = 100;
       phaseCounter = 0;
     }
-    delete pipeline["type"];
+    //delete pipeline["type"];
     delete pipeline["phases"];
     horizonalPositionPipe += pipelineWidth + pipelineSpacer;
   });
