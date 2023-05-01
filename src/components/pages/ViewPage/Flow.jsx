@@ -35,11 +35,18 @@ function Flow(props) {
   };
 
   const focusNode = (node) => {
+
+    if (node.stringType === "pipeline") {
     const x = node.positionAbsolute.x + node.width / 2;
       const y = node.positionAbsolute.y + node.height / 2;
-      const zoom = 1.85;
-
+      const zoom = 0.5;
       setCenter(x, y, { zoom, duration: 1000 });
+    }else{
+      const x = node.positionAbsolute.x + node.width / 2;
+      const y = node.positionAbsolute.y + node.height / 2;
+      const zoom = 1.85;
+      setCenter(x, y, { zoom, duration: 1000 });
+    }
   }
   let handlePaneClick = (e) => {
     props.updateNodeId({
@@ -47,7 +54,6 @@ function Flow(props) {
       nodeName: "choose element from the graph",
     });
   };
-
   return (
     <ReactFlow
       nodes={props.nodesWithState}
