@@ -44,7 +44,6 @@ function ViewPage() {
           }
           // node.enable = props.changesToApply.enable;
         }
-
         return node;
       })
     );

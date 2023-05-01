@@ -1,12 +1,10 @@
 import React, { useState } from "react";
-import StepProducerForm from "./Edit/StepProducerForm";
-import PhaseForm from "./Edit/PhaseForm";
-import SaveButton from "./Edit/SaveButton";
-import PipelineForm from "./Edit/PipelineForm";
+import StepProducerForm from "./StepProducerForm";
+import PhaseForm from "./PhaseForm";
 
 // 3 types of form: pipeline/step_producer/phase. Show the relevant in the form
 function Form(props) {
-  console.log(props.nodeInfo.id);
+  // console.log(props.nodeInfo.id);
   return (
     <div
       style={{
@@ -25,10 +23,7 @@ function Form(props) {
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
       ) : props.nodeInfo.stringType === "pipeline" ? (
-        <PipelineForm 
-        nodeInfo={props.nodeInfo}
-          setChangesToApply={(changes) => props.setChangesToApply(changes)}
-        />
+        "<PipelineForm />"
       ) : props.nodeInfo.stringType === "phase" ? (
         <PhaseForm
           nodeInfo={props.nodeInfo}
