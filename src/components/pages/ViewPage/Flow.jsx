@@ -35,6 +35,7 @@ const onConnect = useCallback(
 let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
     focusNode(node);
+    console.log(node);
   };
 
   // focusNode: This function is used to zoom in on a node when it is clicked on. It is called in the onClick function of the Node component.
