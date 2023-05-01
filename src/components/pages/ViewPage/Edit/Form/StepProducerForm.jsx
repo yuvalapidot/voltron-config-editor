@@ -4,7 +4,7 @@ import { Button } from "@mui/material";
 import { Grid, List, ListItem, ListItemText } from "@mui/material";
 // import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import config from "../../../../config";
+import config from "../../../../../config";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -46,8 +46,9 @@ function StepProducerForm(props) {
     setParams(event.target.value);
   };
 
-  console.log(props.nodeInfo);
+  // console.log(props.nodeInfo);
 
+  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
@@ -55,7 +56,6 @@ function StepProducerForm(props) {
       class: "step_producer." + SPClass,
       // enable: SPEnable,
     });
-    // console.log(props.nodeInfo);
   };
 
   const handleChange = (e, i) => {
@@ -65,7 +65,7 @@ function StepProducerForm(props) {
       ...newState[i],
       [name]: value,
     };
-    console.log(newState);
+    // console.log(newState);
     setState(newState);
   };
 
