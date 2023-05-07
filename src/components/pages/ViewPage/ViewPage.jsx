@@ -1,54 +1,96 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Flow from "./Flow";
 import "./ViewPage.scss";
 import EditWindow from "./Edit/EditWindow";
-import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
-import { nodes } from "../../../elements";
+import ReactFlow, { useNodesState, useEdgesState, updateEdge, addEdge, useReactFlow } from "reactflow";
+import { nodes, edges } from "../../../elements";
 
 // ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
 function ViewPage() {
-  // State 1 - nodesWithState: make the calculated nodes of elements into state
-  const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
-  // State 2 - clickedNodeInfo: Clicking the graph get the information of the node in the Flow
-  let [clickedNodeInfo, setClickedNodeInfo] = useState({
-    nodeName: "choose element from the graph",
-    id: "0",
-  });
-  // State 3 - changesToApply: Which changes I want to update for that node in the Edit Window
-  let [changesToApply, setChangesToApply] = useState({});
-
-  // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
-  useEffect(() => {
-    setNodes((nodesWithState) =>
-      nodesWithState.map((node) => {
-        if (node.id == changesToApply.id) {
-          // it's important that you create a new object here
-          // in order to notify react flow about the change
-          //this new object responsible for editing the step producer
-          node.data = {
-            ...node.data,
-            label: changesToApply.data.label,
-          };
-          node.class = changesToApply.class;
-          //check if its a phase
-          if (node.stringType == "phase") {
-            node.data.label = changesToApply.data.label
-            node.name = changesToApply.data.label
-            node.pType = changesToApply.pType;
-            //node.selected = changesToApply.enable
-            console.log(changesToApply.pType);
-          }
-          //check if its a pipline
-          if (node.stringType == "pipeline") {
-            node.type = changesToApply.type;
-          }
-          // node.enable = props.changesToApply.enable;
-        }
-        return node;
-      })
+    // State 1 - nodesWithState: make the calculated nodes of elements (imported) into state
+    const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
+    
+    // State 2 - clickedNodeInfo: Clicking the graph get the information of the node in the Flow
+    let [clickedNodeInfo, setClickedNodeInfo] = useState({
+      nodeName: "choose element from the graph",
+      id: "0",
+    });
+    
+    // State 3 - changesToApply: Which changes I want to update for that node in the Edit Window
+    let [changesToApply, setChangesToApply] = useState({});
+  
+    // State 4 - edgesWithState: make the calculated edges of elements (imported) into state
+    const [edgesWithState, setEdges, onEdgesChange] = useEdgesState(edges);
+  
+    const onEdgeUpdate = useCallback(
+      (oldEdge, newConnection) =>
+        setEdges((els) => updateEdge(oldEdge, newConnection, els)),
+      []
     );
-    //console.log(nodesWithState);
-  }, [changesToApply]);
+  
+    const onConnect = useCallback(
+      (params) => setEdges((els) => addEdge(params, els)),
+      []
+    );
+  
+    // Define the onSave and onRestore event handlers to save and restore the graph state to/from the local storage
+    const [rfInstance, setRfInstance] = useState(null);
+    const { setViewport } = useReactFlow();
+  
+    const flowKey = 'example-flow';
+    const onSave = useCallback(() => {
+      console.log('In save')
+      console.log(rfInstance)
+      if (rfInstance) {
+        const flow = rfInstance.toObject();
+        console.log('In if of save')
+        console.log(flow)
+        localStorage.setItem(flowKey, JSON.stringify(flow));
+      }
+    }, [rfInstance]);
+  
+    const onRestore = useCallback(() => {
+      const restoreFlow = async () => {
+        const flow = JSON.parse(localStorage.getItem(flowKey));
+        console.log('In restore')
+        console.log(flow)
+        if (flow) {
+          const { x = 0, y = 0, zoom = 1 } = flow.viewport;
+          console.log('In if of restore')
+          setNodes(flow.nodes || []);
+          setEdges(flow.edges || []);
+          setViewport({ x, y, zoom });
+        }
+      };
+  
+      restoreFlow();
+    }, [setNodes, setViewport]);
+  
+    // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
+    useEffect(() => {
+      setNodes((nodesWithState) =>
+        nodesWithState.map((node) => {
+          if (node.id === changesToApply.id) {
+            // it's important that you create a new object here
+            // in order to notify react flow about the change
+            node.data = {
+              ...node.data,
+              label: changesToApply.data.label,
+            };
+            node.class = changesToApply.class;
+            //check if its a phase
+            if (node.stringType === "phase") {
+              node.pType = changesToApply.pType;
+              console.log(changesToApply.pType);
+            }
+            // node.enable = props.changesToApply.enable;
+          }
+  
+          return node;
+        })
+      );
+      console.log(nodesWithState);
+    }, [changesToApply]);
 
   return (
     <div className="window-conteiner">
@@ -66,7 +108,16 @@ function ViewPage() {
           nodesWithState={nodesWithState}
           setNodes={(n) => setNodes(n)}
           onNodesChange={(n) => onNodesChange(n)}
+          edgesWithState = {edgesWithState}
+          onEdgeUpdate={(e) => onEdgeUpdate(e)}
+          onEdgesChange={(e) => onEdgesChange(e)}
+          onConnect={(e) => onConnect(e)}
+          onInit={(i) => setRfInstance(i)}
         />
+        <div>
+          <button onClick={onSave}>save</button>
+          <button onClick={onRestore}>restore</button>
+        </div>
       </div>
     </div>
   );

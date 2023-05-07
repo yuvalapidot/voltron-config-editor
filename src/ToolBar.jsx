@@ -55,6 +55,7 @@ const ToolBar = () => {
             setNodes(elementDict.nodes);
             setEdges(elementDict.edges);
             navigate("/view");
+            handleClose();
     
   
           } catch (err) {
