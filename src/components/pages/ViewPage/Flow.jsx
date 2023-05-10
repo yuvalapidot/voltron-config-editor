@@ -11,12 +11,13 @@ import ReactFlow, {
   ReactFlowProvider,
 } from "reactflow";
 import "reactflow/dist/style.css";
+import SaveRestore from "../../SaveRestore";
 import { nodes, edges } from "../../../elements";
 
 function Flow(props) {
   const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
   const { setCenter } = useReactFlow();
-
+  console.log(typeof props.setNodes);
   // This function handles the click event on a node in the tree.
   let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
@@ -60,14 +61,22 @@ function Flow(props) {
       onConnect={props.onConnect}
       onNodeClick={handleNodeClick}
       onPaneClick={handlePaneClick}
-      onInit={props.setRfInstance}
       style={{ width: "100%", height: "100%" }}
       transform={flowTransform}
       fitView
     >
       <Background />
       <MiniMap zoomable pannable />
-      <Controls />
+      <SaveRestore 
+        nodes={props.nodesWithState}
+        edges={props.edgesWithState}
+        onNodesChange={props.onNodesChange}
+        onEdgesChange={props.onEdgesChange}
+        onConnect={props.onConnect}
+        setNodes={(n) => props.setNodes(n)}
+        setEdges={(e) => props.setEdges(e)}
+      />
+      {/* <Controls /> */}
     </ReactFlow>
   );
 }

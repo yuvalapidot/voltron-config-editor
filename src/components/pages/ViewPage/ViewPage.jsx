@@ -33,38 +33,7 @@ function ViewPage() {
       []
     );
   
-    // Define the onSave and onRestore event handlers to save and restore the graph state to/from the local storage
-    const [rfInstance, setRfInstance] = useState(null);
-    const { setViewport } = useReactFlow();
-  
-    const flowKey = 'example-flow';
-    const onSave = useCallback(() => {
-      console.log('In save')
-      console.log(rfInstance)
-      if (rfInstance) {
-        const flow = rfInstance.toObject();
-        console.log('In if of save')
-        console.log(flow)
-        localStorage.setItem(flowKey, JSON.stringify(flow));
-      }
-    }, [rfInstance]);
-  
-    const onRestore = useCallback(() => {
-      const restoreFlow = async () => {
-        const flow = JSON.parse(localStorage.getItem(flowKey));
-        console.log('In restore')
-        console.log(flow)
-        if (flow) {
-          const { x = 0, y = 0, zoom = 1 } = flow.viewport;
-          console.log('In if of restore')
-          setNodes(flow.nodes || []);
-          setEdges(flow.edges || []);
-          setViewport({ x, y, zoom });
-        }
-      };
-  
-      restoreFlow();
-    }, [setNodes, setViewport]);
+    
   
     // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
     useEffect(() => {
@@ -89,7 +58,7 @@ function ViewPage() {
           return node;
         })
       );
-      console.log(nodesWithState);
+      // console.log(nodesWithState);
     }, [changesToApply]);
 
   return (
@@ -109,15 +78,11 @@ function ViewPage() {
           setNodes={(n) => setNodes(n)}
           onNodesChange={(n) => onNodesChange(n)}
           edgesWithState = {edgesWithState}
-          onEdgeUpdate={(e) => onEdgeUpdate(e)}
+          onEdgeUpdate={(o,e) => onEdgeUpdate(o,e)}
           onEdgesChange={(e) => onEdgesChange(e)}
           onConnect={(e) => onConnect(e)}
-          onInit={(i) => setRfInstance(i)}
+          setEdges={(e) => setEdges(e)}
         />
-        <div>
-          <button onClick={onSave}>save</button>
-          <button onClick={onRestore}>restore</button>
-        </div>
       </div>
     </div>
   );
