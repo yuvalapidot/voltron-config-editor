@@ -5,8 +5,13 @@ import EditWindow from "./Edit/EditWindow";
 import ReactFlow, { useNodesState, useEdgesState } from "reactflow";
 import { nodes } from "../../../elements";
 
+
+
+
 // ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
-function ViewPage() {
+function ViewPage(props) {
+  
+ 
   // State 1 - nodesWithState: make the calculated nodes of elements into state
   const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
   // State 2 - clickedNodeInfo: Clicking the graph get the information of the node in the Flow
@@ -36,7 +41,7 @@ function ViewPage() {
             node.name = changesToApply.data.label
             node.pType = changesToApply.pType;
             //node.selected = changesToApply.enable
-            console.log(changesToApply.pType);
+            console.log(nodesWithState);
           }
           //check if its a pipline
           if (node.stringType == "pipeline") {
@@ -51,6 +56,7 @@ function ViewPage() {
   }, [changesToApply]);
 
   return (
+    
     <div className="window-conteiner">
       {/* Apply changes to the clicked node */}
       <EditWindow

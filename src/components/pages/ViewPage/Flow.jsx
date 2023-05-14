@@ -34,8 +34,7 @@ const onConnect = useCallback(
   // This function handles the click event on a node in the tree.
 let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
-    focusNode(node);
-    console.log(node);
+    focusNode(node); 
   };
 
   // focusNode: This function is used to zoom in on a node when it is clicked on. It is called in the onClick function of the Node component.
@@ -77,7 +76,6 @@ const focusNode = (node) => {
       onPaneClick={handlePaneClick}
       style={{ width: '100%', height: '100%' }}
       transform={flowTransform}
-
       fitView
     >
       <Background />
