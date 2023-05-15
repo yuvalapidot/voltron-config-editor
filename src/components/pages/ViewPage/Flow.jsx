@@ -17,7 +17,9 @@ import { nodes, edges } from "../../../elements";
 function Flow(props) {
   const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
   const { setCenter } = useReactFlow();
-  console.log(typeof props.setNodes);
+  console.log("typeof setNodes in Flow: " + typeof props.setNodes);
+  console.log("props in Flow:")
+    console.log(props)
   // This function handles the click event on a node in the tree.
   let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
@@ -73,7 +75,7 @@ function Flow(props) {
         onNodesChange={props.onNodesChange}
         onEdgesChange={props.onEdgesChange}
         onConnect={props.onConnect}
-        setNodes={(n) => props.setNodes(n)}
+        setNodes={props.setNodes}
         setEdges={(e) => props.setEdges(e)}
       />
       {/* <Controls /> */}

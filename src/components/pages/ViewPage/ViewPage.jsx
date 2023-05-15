@@ -75,7 +75,7 @@ function ViewPage() {
           changesToApply={changesToApply}
           updateNodeId={(nodeId) => setClickedNodeInfo(nodeId)}
           nodesWithState={nodesWithState}
-          setNodes={(n) => setNodes(n)}
+          setNodes={setNodes}
           onNodesChange={(n) => onNodesChange(n)}
           edgesWithState = {edgesWithState}
           onEdgeUpdate={(o,e) => onEdgeUpdate(o,e)}
