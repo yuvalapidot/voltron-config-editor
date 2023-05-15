@@ -17,6 +17,8 @@ const SaveRestore = (props) => {
     console.log(props)
     console.log("typeof setNodes: " + typeof props.setNodes);
     const flowKey = 'example-flow';
+    
+    //Save Function
     const onSave = useCallback(() => {
       console.log('In save')
       console.log("rfInstance: " + rfInstance)
@@ -28,6 +30,7 @@ const SaveRestore = (props) => {
       }
       }, [rfInstance]);
 
+    //Restore Function
     const onRestore = useCallback(() => {
         const restoreFlow = async () => {
             const flow = JSON.parse(localStorage.getItem(flowKey));
@@ -44,7 +47,7 @@ const SaveRestore = (props) => {
         };
 
         restoreFlow();
-    }, [props.setNodes, setViewport]);
+    }, [props, setViewport]);
 
     return (
         <div>
@@ -69,12 +72,7 @@ const SaveRestore = (props) => {
       );
 }
 
-// export default () => (
-//     <ReactFlowProvider>
-//       <SaveRestore {...props} />
-//     </ReactFlowProvider>
-//   );
-
+//Use ReactFlowProvider as a wrapper to use other React Flow libraries
 function SaveRestoreWithProvider(props) {
   return (
     <ReactFlowProvider>
