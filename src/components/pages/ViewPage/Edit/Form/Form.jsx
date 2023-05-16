@@ -13,7 +13,6 @@ function Form(props) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        overflow: "auto",
       }}
     >
       {props.nodeInfo.nodeId === "0" ? ( // White canvas

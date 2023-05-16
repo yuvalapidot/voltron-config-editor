@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Grid, 
-  InputLabel, 
-  FormControl, 
-  Input, 
-  TextField, 
-  Box, 
-  Button,  
-  MenuItem, 
-  Radio, 
-  RadioGroup, 
-  FormControlLabel, 
-  FormLabel } from "@mui/material";
+import {
+  Grid,
+  InputLabel,
+  FormControl,
+  Input,
+  TextField,
+  Box,
+  Button,
+  MenuItem,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormLabel
+} from "@mui/material";
 import config from "../../../../../config";
+import "./Form.scss";
 
 const classes = config.SPClasses;
 
@@ -19,11 +22,13 @@ function StepProducerForm(props) {
   const [SPName, setSPName] = useState(props.nodeInfo.data.label);
   const [SPClass, setClass] = useState(props.nodeInfo.class.substring(14));
   const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
-  const [SPParams, setParams] = useState(JSON.stringify(props.nodeInfo.parameters));
+  const [SPParams, setParams] = useState(props.nodeInfo.parameters);
   // const [SPParams, setParams] = useState(props.nodeInfo.parameters);
-  const [state, setState] = useState(props.nodeInfo.parameters);
+  //const [state, setState] = useState(props.nodeInfo.parameters);
 
   useEffect(() => {
+    console.log("updated step_producer", props.nodeInfo)
+    console.log(props.nodeInfo.parameters)
     setSPName(props.nodeInfo.data.label);
     setClass(props.nodeInfo.class.substring(14));
     setEnable(props.nodeInfo.enable);
@@ -57,19 +62,19 @@ function StepProducerForm(props) {
     });
   };
 
-  const handleChange = (e, i) => {
-    const { value, name } = e.target;
-    const newState = [...state];
-    newState[i] = {
-      ...newState[i],
-      [name]: value,
-    };
-    // console.log(newState);
-    setState(newState);
-  };
+  // const handleChange = (e, i) => {
+  //   const { value, name } = e.target;
+  //   const newState = [...state];
+  //   newState[i] = {
+  //     ...newState[i],
+  //     [name]: value,
+  //   };
+  //   // console.log(newState);
+  //   setState(newState);
+  // };
 
   return (
-    <div style={formStyle}>
+    <div className="edit-window-form">
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
@@ -78,7 +83,6 @@ function StepProducerForm(props) {
               label="Name:"
               value={SPName}
               margin="normal"
-              fullWidth
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
@@ -139,29 +143,31 @@ function StepProducerForm(props) {
               </FormLabel>
             </Box>
           </Grid>
-          <Grid container
-            spacing={5}>
-            {Object.entries(SPParams).map(([key, value]) => (
-              <React.Fragment key={key}>
-                <Grid item xs={15}>
-                  <FormControl variant="standard" style={styledKeys}>
-                    <InputLabel htmlFor="component-simple">key:</InputLabel>
-                    <Input id="component-simple" disableUnderline defaultValue={key}/>
-                  </FormControl>
-                  <TextField style = {styledValues}
-                    id="outlined-basic"
-                    margin="normal"
-                    fullWidth
-                    label="value:"
-                    value={value}
-                    onChange={(e) => handleParamsChange(e, key)}
-                  />
-                </Grid>
-              </React.Fragment>
-            ))}
+          <Grid container item xs={10}
+            spacing={1}>
+            {props.nodeInfo.parameters &&
+              Object.entries(SPParams).map(([key, value]) => (
+                <React.Fragment key={key}>
+                  <Grid item xs={10}>
+                    <FormControl variant="standard" style={dynamicInputStyle(value, true)}>
+                      <InputLabel htmlFor="component-simple">key:</InputLabel>
+                      <Input id="component-simple" disableUnderline defaultValue={key} />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={10}>
+                    <TextField style={dynamicInputStyle(value, false)}
+                      id="outlined-basic"
+                      margin="normal"
+                      label="value:"
+                      value={value}
+                      onChange={(e) => handleParamsChange(e, key)}
+                    />
+                  </Grid>
+                </React.Fragment>
+              ))}
           </Grid>
           <Grid item xs={6} >
-            <Box mt={2} mb={2}>
+            <Box mt={2} mb={2} alignItems="center">
               <Button onClick={handleClick} variant="contained">
                 APPLY CHANGES
               </Button>
@@ -173,19 +179,20 @@ function StepProducerForm(props) {
   );
 }
 
-let formStyle = {
-  display: "flex",
-  justifyContent: "center",
-  width: "100%",
-};
+export let dynamicInputStyle = (value, isKey) => {
+  if (isKey === false) {
+    return {
+      marginTop: "1px",
+      width: value.length > 0 ? value.length * 12 : "auto",
+    }//return
+  } else {
+    return {
+      marginLeft: "15px",
+      marginBottom: "1px",
+      marginTop: "5px",
+      width: value.length > 0 ? value.length * 12 : "auto",
+    };
+  };//else
+}//dynamicInputStyle
 
-let styledValues = {
-  marginLeft: "38px",
-  marginTop: "2px",
-}
-
-let styledKeys = {
-  marginLeft: "52px",
-  marginBottom: "5px",
-}
 export default StepProducerForm;

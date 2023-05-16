@@ -7,6 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
+import "./Form.scss"
 
 const types = [
   {
@@ -24,7 +25,6 @@ function PipelineForm(props) {
   const [piplineType, setPiplineType] = useState(props.nodeInfo.type);
 
   useEffect(() => {
-   console.log("updated pipline", props.nodeInfo)
     setPiplineName(props.nodeInfo.data.label);
     setPiplineType(props.nodeInfo.type);
   }, [props.nodeInfo]);
@@ -51,7 +51,7 @@ function PipelineForm(props) {
      };
 
   return (
-    <div style={formStyle}>
+    <div calssName = "edit-window-form">
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
@@ -101,11 +101,5 @@ function PipelineForm(props) {
     </div>
   );
 }
-
-let formStyle = {
-  display: "flex",
-  justifyContent: "center",
-  width: "100%",
-};
 
 export default PipelineForm;
