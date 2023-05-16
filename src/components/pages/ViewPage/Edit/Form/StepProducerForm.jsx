@@ -149,7 +149,7 @@ function StepProducerForm(props) {
               Object.entries(SPParams).map(([key, value]) => (
                 <React.Fragment key={key}>
                   <Grid item xs={10}>
-                    <FormControl variant="standard" style={dynamicInputStyle(value, true)}>
+                    <FormControl variant="standard" style={dynamicInputStyle(key, true)}>
                       <InputLabel htmlFor="component-simple">key:</InputLabel>
                       <Input id="component-simple" disableUnderline defaultValue={key} />
                     </FormControl>
@@ -179,18 +179,18 @@ function StepProducerForm(props) {
   );
 }
 
-export let dynamicInputStyle = (value, isKey) => {
+export let dynamicInputStyle = (input, isKey) => {
   if (isKey === false) {
     return {
       marginTop: "1px",
-      width: value.length > 0 ? value.length * 12 : "auto",
+      width: input.length > 0 ? input.length * 12 : "auto",
     }//return
   } else {
     return {
       marginLeft: "15px",
       marginBottom: "1px",
       marginTop: "5px",
-      width: value.length > 0 ? value.length * 12 : "auto",
+      width: input.length > 0 ? input.length * 12 : "auto",
     };
   };//else
 }//dynamicInputStyle
