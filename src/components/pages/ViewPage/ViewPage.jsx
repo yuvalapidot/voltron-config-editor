@@ -33,8 +33,6 @@ function ViewPage() {
       []
     );
   
-    
-  
     // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
     useEffect(() => {
       setNodes((nodesWithState) =>

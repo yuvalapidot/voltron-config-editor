@@ -5,6 +5,8 @@ import ViewPage from "./components/pages/ViewPage/ViewPage";
 import ToolBar from "./ToolBar";
 import { useEffect } from "react";
 import { ReactFlowProvider } from "reactflow";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ function App() {
         <Route path="/view" element={<ViewPage />} />
       </Routes>
     </ReactFlowProvider>
+    <ToastContainer />
     </div>
   );
 }
