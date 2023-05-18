@@ -17,14 +17,10 @@ import { nodes, edges } from "../../../elements";
 function Flow(props) {
   const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
   const { setCenter } = useReactFlow();
-  console.log("typeof setNodes in Flow: " + typeof props.setNodes);
-  console.log("props in Flow:")
-    console.log(props)
   // This function handles the click event on a node in the tree.
   let handleNodeClick = (e, node) => {
     props.updateNodeId(node);
     focusNode(node);
-    console.log(node);
   };
 
   // focusNode: This function is used to zoom in on a node when it is clicked on. It is called in the onClick function of the Node component.
