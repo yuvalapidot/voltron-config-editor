@@ -35,6 +35,7 @@ function ViewPage(props) {
             label: changesToApply.data.label,
           };
           node.class = changesToApply.class;
+          node.parameters = changesToApply.parameters;
           //check if its a phase
           if (node.stringType == "phase") {
             node.data.label = changesToApply.data.label

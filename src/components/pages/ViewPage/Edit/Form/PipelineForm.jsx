@@ -7,7 +7,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
-import "./Form.scss"
+import styles from "./Form.module.scss"
 
 const types = [
   {
@@ -37,21 +37,21 @@ function PipelineForm(props) {
     setPiplineType(event.target.value);
   };
 
-//handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
+  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
       data: {
         ...props.nodeInfo.data,
-        label: piplineName 
+        label: piplineName
       },
       type: piplineType,
-          });
-          console.log("clicked apply changes", props.nodeInfo)
-     };
+    });
+    console.log("clicked apply changes", props.nodeInfo)
+  };
 
   return (
-    <div calssName = "edit-window-form">
+    <div calssName={styles['edit-window-form']}>
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
@@ -60,7 +60,6 @@ function PipelineForm(props) {
               label="Name:"
               value={piplineName}
               margin="normal"
-              fullWidth
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();

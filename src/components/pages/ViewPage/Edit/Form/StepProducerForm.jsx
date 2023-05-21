@@ -14,7 +14,7 @@ import {
   FormLabel
 } from "@mui/material";
 import config from "../../../../../config";
-import "./Form.scss";
+import styles from "./Form.module.scss";
 
 const classes = config.SPClasses;
 
@@ -28,7 +28,6 @@ function StepProducerForm(props) {
 
   useEffect(() => {
     console.log("updated step_producer", props.nodeInfo)
-    console.log(props.nodeInfo.parameters)
     setSPName(props.nodeInfo.data.label);
     setClass(props.nodeInfo.class.substring(14));
     setEnable(props.nodeInfo.enable);
@@ -47,10 +46,22 @@ function StepProducerForm(props) {
     setEnable(event.target.value);
   };
 
-  const handleParamsChange = (event, key) => {
-    setParams({ ...SPParams, [key]: event.target.value });
+  const handleParamsChange = (event, key, isKey) => {
+    // First, we create a copy of the SPParams state
+    let paramsCopy = { ...SPParams };
+    console.log(paramsCopy[key]);
+    // If isKey is true, then we're updating a key. 
+    //To do this, we need to create a new key-value pair and delete the old one
+    if (isKey) {
+      paramsCopy[event.target.value] = paramsCopy[key];
+      delete paramsCopy[key];
+    }
+    // Otherwise, we're updating a value, so we just change the value for the existing key
+    else {
+      paramsCopy[key] = event.target.value;
+    }
+    setParams(paramsCopy);
   };
-  // console.log(props.nodeInfo);
 
   //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
@@ -58,6 +69,7 @@ function StepProducerForm(props) {
       ...props.nodeInfo,
       data: { ...props.nodeInfo.data, label: SPName }, // ... = {example: "1", {example2: "2"}} -> {example: "1",example2: "2"} as Json
       class: "step_producer." + SPClass,
+      parameters: SPParams,
       // enable: SPEnable,
     });
   };
@@ -74,7 +86,7 @@ function StepProducerForm(props) {
   // };
 
   return (
-    <div className="edit-window-form">
+    <div className={styles['edit-window-form']}>
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
@@ -83,12 +95,6 @@ function StepProducerForm(props) {
               label="Name:"
               value={SPName}
               margin="normal"
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleClick();
-                }
-              }}
               onChange={handleSPNameChange}
             ></TextField>
           </Grid>
@@ -100,8 +106,7 @@ function StepProducerForm(props) {
               value={SPClass}
               margin="normal"
               variant="outlined"
-              onChange={handleClassChange}
-            >
+              onChange={handleClassChange}>
               {classes.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
@@ -120,8 +125,7 @@ function StepProducerForm(props) {
                 name="controlled-radio-buttons-group"
                 // value={SPEnable}
                 defaultValue="true"
-                onChange={handleEnableChange}
-              >
+                onChange={handleEnableChange}>
                 <FormControlLabel
                   value="true"
                   control={<Radio />}
@@ -143,24 +147,32 @@ function StepProducerForm(props) {
               </FormLabel>
             </Box>
           </Grid>
-          <Grid container item xs={10}
+          <Grid
+            container
+            item xs={10}
             spacing={1}>
             {props.nodeInfo.parameters &&
               Object.entries(SPParams).map(([key, value]) => (
                 <React.Fragment key={key}>
                   <Grid item xs={10}>
-                    <FormControl variant="standard" style={dynamicInputStyle(key, true)}>
+                    <FormControl
+                      variant="standard"
+                      style={dynamicInputStyle(key, true)}
+                      onBlur={(e) => handleParamsChange(e, key, true)}>
                       <InputLabel htmlFor="component-simple">key:</InputLabel>
-                      <Input id="component-simple" disableUnderline defaultValue={key} />
+                      <Input id="component-simple"
+                        disableUnderline
+                        defaultValue={key} />
                     </FormControl>
                   </Grid>
                   <Grid item xs={10}>
-                    <TextField style={dynamicInputStyle(value, false)}
+                    <TextField
+                      style={dynamicInputStyle(value, false)}
                       id="outlined-basic"
                       margin="normal"
                       label="value:"
                       value={value}
-                      onChange={(e) => handleParamsChange(e, key)}
+                      onChange={(e) => handleParamsChange(e, key, false)}
                     />
                   </Grid>
                 </React.Fragment>
@@ -180,17 +192,18 @@ function StepProducerForm(props) {
 }
 
 export let dynamicInputStyle = (input, isKey) => {
+  let width = `${Math.max(input.length*1.3, 12)}ch`;
   if (isKey === false) {
     return {
       marginTop: "1px",
-      width: input.length > 0 ? input.length * 12 : "auto",
+      width: width,
     }//return
   } else {
     return {
       marginLeft: "15px",
       marginBottom: "1px",
       marginTop: "5px",
-      width: input.length > 0 ? input.length * 12 : "auto",
+      width: width,
     };
   };//else
 }//dynamicInputStyle
