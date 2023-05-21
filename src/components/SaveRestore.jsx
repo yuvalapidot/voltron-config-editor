@@ -1,4 +1,5 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import ReactFlow, {
   ReactFlowProvider,
   useReactFlow,
@@ -16,6 +17,7 @@ const SaveRestore = (props) => {
   const [rfInstance, setRfInstance] = useState(null);
   const { setViewport } = useReactFlow();
   const flowKey = "example-flow";
+  const navigate = useNavigate();
 
   //Save Function
   const onSave = useCallback(() => {
@@ -34,6 +36,13 @@ const SaveRestore = (props) => {
     }
   }, [rfInstance]);
 
+  const onSaveNoNotifications = useCallback(() => {
+    if (rfInstance) {
+      const flow = rfInstance.toObject();
+      localStorage.setItem(flowKey, JSON.stringify(flow));
+    }
+  }, [rfInstance]);
+
   //Restore Function
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
@@ -43,6 +52,7 @@ const SaveRestore = (props) => {
         props.setNodes(flow.nodes || []);
         props.setEdges(flow.edges || []);
         setViewport({ x, y, zoom });
+        // navigate("/view")
         toast.success("Restored Successfully", {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
@@ -56,11 +66,17 @@ const SaveRestore = (props) => {
     };
 
     restoreFlow();
-  }, [props, setViewport]);
+  }, [props, setViewport]); //localStorage would be overwritten after fileupload
 
-  // useEffect(() => {
-  //   onSave();
-  // }, [props.nodes, props.edges, onSave]);
+  useEffect(() => {
+    if (window.location.pathname === '/') {
+      return; // Skip the effect for the home page route
+    }
+    // Execute the effect for other routes
+    onSaveNoNotifications();
+    return () => {
+    };
+  }, [props, onSaveNoNotifications]);
 
   return (
     <div>
