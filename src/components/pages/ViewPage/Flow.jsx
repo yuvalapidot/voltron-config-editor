@@ -64,6 +64,8 @@ const focusNode = (node) => {
   };
 
   return (
+    //using React.Fragment to create a wrapper for ReactFlow so we can use useReactFlow hook
+    <React.Fragment>
     <ReactFlow
       nodes={props.nodesWithState}
       edges={edgesWithState}
@@ -76,19 +78,12 @@ const focusNode = (node) => {
       onPaneClick={handlePaneClick}
       style={{ width: '100%', height: '100%' }}
       transform={flowTransform}
-      fitView
-    >
+      fitView>
       <Background />
       <MiniMap zoomable pannable />
       <Controls />
     </ReactFlow>
+    </React.Fragment>
   );
 }
-function FlowWithProvider(props) {
-  return (
-    <ReactFlowProvider>
-      <Flow {...props} />
-    </ReactFlowProvider>
-  );
-}
-export default FlowWithProvider;
+export default Flow;
