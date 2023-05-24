@@ -5,23 +5,38 @@ let pipelineId = 1; // Pipeline ID counter
 let phaseId = 1;    // Phase ID counter
 let spId = 0.1;     // Step producer ID counter
 
-export function yamlToDict(data) {
+export function yamlToDict(data) 
+{
     return yaml.load(data, { schema: yaml.JSON_SCHEMA });
-  };
+};
 
-export function createElements(data) {
-    const initialElements = { nodes: [], edges: [] };
+export function createElements(data) 
+{
+    const initialElements = { common: [], state: [], nodes: [], edges: [] };
+    
+    // "common" section
+    const yamlCommon = data['common'];
+    initialElements['common'].push(yamlCommon);
+    
+    // "state" section
+    const yamlState = data['state'];
+    initialElements['state'].push(yamlState);
+    
+    // "pipeline" section
     const yamlPipelines = data['pipeline'];
     const [pipelines, innerEdges] = createPipelines(yamlPipelines);
     initialElements['nodes'].push(...pipelines);
     initialElements['edges'].push(...innerEdges);
     const edges = createEdges(pipelines);
     initialElements['edges'].push(...edges);
+    
     phaseId = 1;
+    
     return initialElements;
-  }
+}
   
-  function createPipelines(yamlPipelines) {
+function createPipelines(yamlPipelines) 
+{
     const pipelines = [];
     const innerEdges = [];
     let newPl = {};
@@ -40,9 +55,10 @@ export function createElements(data) {
       pipelineId += 1;
     });
     return [pipelines, innerEdges];
-  }
+}
   
-  function createPhases(yamlPhases, type) {
+function createPhases(yamlPhases, type) 
+{
     const plPhases = [];
     const plInnerEdges = [];
     let phaseNode = {};
@@ -72,9 +88,10 @@ export function createElements(data) {
       phaseNode = {};
     });
     return [plPhases, plInnerEdges];
-  }
+}
   
-  function createStepProducers(producersList) {
+function createStepProducers(producersList) 
+{
     const phaseStepProducers = [];
     const innerEdges = [];
     let producerNode = {};
@@ -108,9 +125,10 @@ export function createElements(data) {
     });
   
     return [phaseStepProducers, innerEdges];
-  }
+}
   
-  function createEdges(pipelines) {
+function createEdges(pipelines) 
+{
     const edges = [];
     let newEdge = {};
     pipelines.forEach(pipeline => {
@@ -132,9 +150,10 @@ export function createElements(data) {
       }
     });
     return edges;
-  }
+}
   
-  function createInnerEdges(src, target) {
+function createInnerEdges(src, target) 
+{
     const newEdge = {};
     newEdge["id"] = "e" + src + "-" + target;
     newEdge["source"] = String(src);
@@ -142,5 +161,5 @@ export function createElements(data) {
     newEdge["animated"] = true;
     newEdge["zIndex"] = 999;
     return newEdge;
-  }
+}
   
