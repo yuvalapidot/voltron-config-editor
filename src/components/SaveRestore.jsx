@@ -52,7 +52,6 @@ const SaveRestore = (props) => {
         props.setNodes(flow.nodes || []);
         props.setEdges(flow.edges || []);
         setViewport({ x, y, zoom });
-        // navigate("/view")
         toast.success("Restored Successfully", {
           position: toast.POSITION.TOP_CENTER,
           autoClose: 5000,
@@ -69,8 +68,8 @@ const SaveRestore = (props) => {
   }, [props, setViewport]); //localStorage would be overwritten after fileupload
 
   useEffect(() => {
-    if (window.location.pathname === '/') {
-      return; // Skip the effect for the home page route
+    if ((props.edges).length === 0 && (props.nodes).length === 0){
+      return;
     }
     // Execute the effect for other routes
     onSaveNoNotifications();
