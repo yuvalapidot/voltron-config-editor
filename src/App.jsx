@@ -13,7 +13,8 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      if (event.key === "F5") {
+      //When you refresh the page with F5 - go back to home page since you cant upload a file if you are at /view
+      if (event.key === "F5") { 
         navigate("/");
         event.stopPropagation();
       }
