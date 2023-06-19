@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import StepProducerForm from "./StepProducerForm";
 import PhaseForm from "./PhaseForm";
 import PipelineForm from "./PipelineForm";
+import { Button } from "@mui/material";
 
 // 3 types of form: pipeline/step_producer/phase. Show the relevant in the form
 function Form(props) {
@@ -13,7 +14,6 @@ function Form(props) {
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        overflow: "auto",
       }}
     >
       {props.nodeInfo.nodeId === "0" ? ( // White canvas
@@ -36,6 +36,7 @@ function Form(props) {
           setChangesToApply={(changes) => props.setChangesToApply(changes)}
         />
       ) : null}
+   
       {/* <SaveButton nodesWithState={props.nodesWithState} /> */}
     </div>
   );

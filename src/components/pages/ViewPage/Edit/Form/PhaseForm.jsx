@@ -8,6 +8,7 @@ import FormControl from "@mui/material/FormControl";
 import FormLabel from "@mui/material/FormLabel";
 import { Grid } from "@mui/material";
 import { Button } from "@mui/material";
+import styles from "./Form.module.scss"
 
 const types = [
   {
@@ -63,7 +64,7 @@ function PhaseForm(props) {
   };
 
   return (
-    <div style={formStyle}>
+    <div className={styles['edit-window-form']}>
       <form style={{ width: "100%" }}>
         <Grid container justifyContent="center" spacing={1}>
           <Grid item xs={10}>
@@ -71,8 +72,7 @@ function PhaseForm(props) {
               id="phase-name"
               label="Name:"
               value={phaseName}
-              margin="normal"
-              fullWidth
+              margin="normal"            
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
                   e.preventDefault();
@@ -139,11 +139,5 @@ function PhaseForm(props) {
     </div>
   );
 }
-
-let formStyle = {
-  display: "flex",
-  justifyContent: "center",
-  width: "100%",
-};
 
 export default PhaseForm;
