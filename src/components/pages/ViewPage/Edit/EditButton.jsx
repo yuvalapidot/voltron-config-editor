@@ -21,20 +21,19 @@ function EditButton(props) {
   };
 
   return (
-    <Button variant="contained" style={buttonStyle} onClick={handleClick}>
-      <div>
-        {buttonText}
-        <br />
-      </div>
-      <EditIcon />
+    <Button
+      variant="contained"
+      style={buttonStyle}
+      onClick={handleClick}>
+      {buttonText}<EditIcon />
     </Button>
   );
 }
-
 let buttonStyle = {
   alignSelf: "center",
   display: "inline-block",
   padding: "1.5em 1em 1.5em 1em",
+  marginLeft: "1em",
 };
 
 export default EditButton;
