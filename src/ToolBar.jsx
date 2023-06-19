@@ -5,7 +5,6 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import logo from "./assets/output-onlinepngtools.png";
 import { Button } from "@mui/material";
@@ -44,6 +43,10 @@ const ToolBar = () => {
 
       if (file != null) {
         const reader = new FileReader();
+        reader.onload  = () => {
+          try 
+          {
+            const initialDict = yamlToDict(reader.result);  // parse YAML into JS object
         reader.onload = () => {
           try {
             //const data = yaml.load(reader.result);
