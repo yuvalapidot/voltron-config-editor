@@ -30,26 +30,20 @@ const ToolBar = () => {
     setAnchorEl(null);
   };
 
-  // Here we call the backend functions to arrange the yaml functions and create the objects
   const uploadHandler = async () => {
     // create a hidden file input element
     const fileInput = document.createElement("input");
     fileInput.type = "file";
     fileInput.accept = ".yaml, .json"; // set the allowed file type(s)
-
+  
     // listen for the user to select a file
     fileInput.addEventListener("change", async (e) => {
       const file = e.target.files[0];
-
+  
       if (file != null) {
         const reader = new FileReader();
-        reader.onload  = () => {
-          try 
-          {
-            const initialDict = yamlToDict(reader.result);  // parse YAML into JS object
         reader.onload = () => {
           try {
-            //const data = yaml.load(reader.result);
             const initialDict = yamlToDict(reader.result); // parse YAML into JS object
             const elementDict = createElements(initialDict);
             setNodes(elementDict.nodes);
@@ -65,10 +59,10 @@ const ToolBar = () => {
         reader.readAsText(file);
       }
     });
-
+  
     // simulate a click on the file input element to display the file input dialog
     fileInput.click();
-  };
+  };  
 
   const saveHandler = () => {
     // const fileContent = "---\n"; // This is the content of the YAML file
