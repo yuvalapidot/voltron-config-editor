@@ -1,0 +1,376 @@
+- data: Initialization
+  id: pl-76
+  phases:
+  - data: Ingestion
+    extent: parent
+    id: '1'
+    pType: blocking
+    parentNode: pl-76
+    step_producers:
+    - class: step_producer.reinvestigation.ReinvestigationStepProducer
+      data: Reinvestigation
+      enable: '{{ENABLE_REINVESTIGATION}}'
+      extent: parent
+      id: '1.1'
+      parameters:
+        exclude_keys: '{{STATE_EXCLUDE_KEYS}}'
+        input_key: '{{INPUT_STATE_KEY}}'
+        reinvestigation_api: '{{reinvestigation_api}}'
+        state_pickle: '{{STATE_PICKLE_FILE}}'
+      parentNode: '1'
+    - class: step_producer.investigation_input.InvestigationInputStepProducer
+      data: Investigation Input
+      enable: '{{ENABLE_INGESTION_PRODUCER}}'
+      extent: parent
+      id: '1.2'
+      parameters:
+        input_findings: '{{FINDINGS}}'
+        input_observed_data: '{{OBSERVED_DATA}}'
+        input_pattern: '{{STIX_PATTERN}}'
+        max_trigger_events: '{{MAX_TRIGGER_EVENTS}}'
+        udi: '{{udi}}'
+        window_end: '{{stop_ts}}'
+        window_start: '{{start_ts}}'
+      parentNode: '1'
+  type: linear
+- data: Expansion Loop
+  id: pl-77
+  phases:
+  - data: Investigation Timeout
+    enable: '{{ENABLE_TIMEOUT_WATCHDOG}}'
+    extent: parent
+    id: '2'
+    pType: watchdog
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.wait_on_state.WaitTimeoutProducer
+      data: Wait for Investigation Timeout
+      extent: parent
+      id: '2.1'
+      parameters:
+        interval: '0.1'
+        timeout: '{{MAX_EXPANSION_LOOP_TIME_SECONDS}}'
+      parentNode: '2'
+    - class: step_producer.stop_investigation.StopInvestigationProducer
+      data: Stop Investigation
+      extent: parent
+      id: '2.2'
+      parentNode: '2'
+  - data: Event Insertion
+    extent: parent
+    id: '3'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.evidence_insertion.EventsBatchInsertionProducer
+      data: Event Batch Insertion
+      extent: parent
+      id: '3.1'
+      parameters:
+        batch: '{{EVENT_INSERTION_BATCH_SIZE}}'
+      parentNode: '3'
+  - data: Event Enrichment
+    enable: '{{ENABLE_EVENT_ENRICHMENT_PHASE}}'
+    extent: parent
+    id: '4'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.knowledge_base.KnowledgeBaseProducer
+      data: Knowledge Base
+      enable: '{{ENABLE_KNOWLEDGE_BASE_PRODUCER}}'
+      extent: parent
+      id: '4.1'
+      parameters:
+        batch: '{{KB_ENRICHMENT_BATCH}}'
+        confidence_conversion: '{{KB_CONFIDENCE_CONVERSION}}'
+        kb:
+          class: symptom.symptom_knowledge_base.SymptomKnowledgeBase
+          parameters:
+            drc:
+              class: cp4s.drc.drc_api.DRCApi
+              parameters:
+                auth: '{{AUTH}}'
+        parallelism: '{{KB_PARALLEL}}'
+      parentNode: '4'
+    thread_count: '0'
+  - data: Node Enrichment
+    enable: '{{ENABLE_NODE_ENRICHMENT_PHASE}}'
+    extent: parent
+    id: '5'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.tis_enrichment.TISStepProducer
+      data: TIS Enrichment
+      enable: '{{ENABLE_TIS_ENRICHMENT_PRODUCER}}'
+      extent: parent
+      id: '5.1'
+      parameters:
+        batch: '{{TIS_BATCH_QUERY_MAX_SIZE}}'
+        express: '{{TIS_EXPRESS}}'
+        max_iocs: '{{TIS_BATCH_QUERY_MAX_IOC}}'
+        symptom_threshold: '{{TIS_SYMPTOM_THRESHOLD}}'
+        timeout_seconds: '{{TIS_BATCH_TIMEOUT_SECS}}'
+        tis:
+          class: cp4s.ti.tis.TISEnrichBatchApi
+          parameters:
+            auth: '{{AUTH}}'
+      parentNode: '5'
+    - class: step_producer.car_enrichment.CarEnrichmentProducer
+      data: CAR Enrichment Producer
+      enable: '{{ENABLE_CAR_ENRICHMENT_PRODUCER}}'
+      extent: parent
+      id: '5.2'
+      parameters:
+        car:
+          class: cp4s.car.car_api.CARApi
+          parameters:
+            auth: '{{AUTH}}'
+      parentNode: '5'
+    thread_count: '2'
+  - data: Reasoning
+    extent: parent
+    id: '6'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.edge_scoring.DynamicEdgeScoringProducer
+      data: Dynamic Edge Scoring
+      enable: '{{ENABLE_EDGE_SCORING_PRODUCER}}'
+      extent: parent
+      id: '6.1'
+      parentNode: '6'
+    - class: step_producer.score_propagation.BeliefPropagationProducer
+      data: Belief Propagation
+      enable: '{{ENABLE_BELIEF_PROPAGATION_PRODUCER}}'
+      extent: parent
+      id: '6.2'
+      parameters:
+        convergence_threshold: '{{BELIEF_PROPAGATION_CONVERGENCE_THRESHOLD}}'
+        iterative_vs_scheduled: '{{ITER_VS_SCHEDULED_BP}}'
+        max_iterations: '{{MAX_BELIEF_PROPAGATION_ITERATIONS}}'
+      parentNode: '6'
+  - data: Graph Information
+    extent: parent
+    id: '7'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.graph_info.GraphInformationProducer
+      data: Graph Information
+      extent: parent
+      id: '7.1'
+      parentNode: '7'
+  - data: Write Results
+    enable: '{{ENABLE_WRITE_RESULTS_PHASE}}'
+    extent: parent
+    id: '8'
+    pType: non_blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
+      data: Write Investigation Results
+      enable: '{{ENABLE_WRITE_INVESTIGATION_RESULTS_PRODUCER}}'
+      extent: parent
+      id: '8.1'
+      parameters:
+        eliminate_dup_case_findings: '{{EXCLUDE_CASE_FINDINGS_DUPLICATES}}'
+        eliminate_dup_tis_event_symptoms: '{{ELIMINATE_DUPLICATE_SYMPTOMS}}'
+        include_case_findings: '{{INCLUDE_CASE_FINDINGS}}'
+        include_observables: '{{INCLUDE_OBSERVABLES}}'
+        include_process_tree: '{{EXTRACT_PROCESSES_ENABLED}}'
+        include_related_ti_events: '{{INCLUDE_RELATED_TI_EVENTS}}'
+        log: '{{LOG_INVESTIGATION_RESULTS}}'
+        max_events: '{{MAX_RESULT_EVENTS}}'
+        out_dir: '{{OUT_DIR}}'
+        prefix: results
+      parentNode: '8'
+    - class: step_producer.write_investigation_results.ExportStatePickleProducer
+      data: Write State Pickle
+      enable: '{{ENABLE_WRITE_STATE_PICKLE_PRODUCER}}'
+      extent: parent
+      id: '8.2'
+      parameters:
+        input_key: '{{INPUT_STATE_KEY}}'
+        log: '{{LOG_PICKLE}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+        reinvestigation_api: '{{reinvestigation_api}}'
+      parentNode: '8'
+    - class: step_producer.write_investigation_results.ExportGraphGexfProducer
+      data: Write Graph Gexf
+      enable: '{{ENABLE_WRITE_GRAPH_GEXF_PRODUCER}}'
+      extent: parent
+      id: '8.3'
+      parameters:
+        log: '{{LOG_GEXF}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+      parentNode: '8'
+    - class: step_producer.write_investigation_results.ExportEngineStatistics
+      data: Write Engine Statistics
+      enable: '{{ENABLE_WRITE_STATISTICS_PRODUCER}}'
+      extent: parent
+      id: '8.4'
+      parameters:
+        log: '{{LOG_STATISTICS}}'
+        out_dir: '{{OUT_DIR}}'
+      parentNode: '8'
+    thread_count: '3'
+  - data: Conditional Stop Investigation
+    extent: parent
+    id: '9'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.stop_investigation.StopInvestigationProducer
+      data: Stop Investigation Conditions
+      extent: parent
+      id: '9.1'
+      parameters:
+        iteration_grace: '{{CONSEC_ITERS_NODES_BELOW_THRESHOLD_EXPANSION}}'
+        max_events: '{{MAX_GRAPH_SIZE_EVENTS}}'
+        max_iterations: '{{MAX_ITERATIONS_NUM}}'
+        max_nodes: '{{MAX_GRAPH_SIZE_NODES}}'
+      parentNode: '9'
+  - data: Expansion
+    extent: parent
+    id: '10'
+    pType: non_blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.udi_expansion.UDIExpansionStepProducer
+      data: Udi Expansion
+      extent: parent
+      id: '10.1'
+      parameters:
+        above_threshold: '{{NUM_NODES_TO_EXPAND_ABOVE_THRESHOLD}}'
+        always_concat: '{{UDI_CONCAT_QUERIES}}'
+        below_threshold: '{{NUM_NODES_TO_EXPAND_BELOW_THRESHOLD}}'
+        concat_iterations: '{{UDI_CONCAT_ON_ITERATIONS}}'
+        default_window_end: '{{stop_ts}}'
+        default_window_start: '{{start_ts}}'
+        expansion_threshold: '{{NODE_SCORE_THRESHOLD}}'
+        max_nodes_concat: '{{UDI_MAX_QUERIES_CONCAT}}'
+        max_separate_nodes: '{{UDI_MAX_SEPARATE_QUERIES}}'
+        node_re_expansion_time_ratio: '{{NODE_RE_EXPAND_TIME_WINDOW_RATIO}}'
+        num_nodes_to_expand_initial: '{{NUM_NODES_TO_EXPAND_INITIAL}}'
+        udi: '{{udi}}'
+        whitelist: '{{EXPANSION_WL}}'
+      parentNode: '10'
+    thread_count: '8'
+  - data: Wait for Results
+    extent: parent
+    id: '11'
+    pType: blocking
+    parentNode: pl-77
+    step_producers:
+    - class: step_producer.wait_on_state.WaitForEventsProducer
+      data: Wait for Events
+      extent: parent
+      id: '11.1'
+      parameters:
+        interval: '0.1'
+        min_events: '{{WAIT_UDI_MIN_EVENTS}}'
+        phase_to_wait: Expansion
+        timeout: '{{WAIT_UDI_EVENTS_SECONDS}}'
+      parentNode: '11'
+  type: loop
+- data: Completion
+  id: pl-78
+  phases:
+  - data: Completion Analysis
+    enable: '{{ENABLE_COMPLETION_ANALYSIS_PHASE}}'
+    extent: parent
+    id: '12'
+    pType: blocking
+    parentNode: pl-78
+    step_producers:
+    - class: step_producer.classification.ClassificationProducer
+      data: Completion Classification
+      enable: '{{ENABLE_COMPLETION_CLASSIFICATION_PRODUCER}}'
+      extent: parent
+      id: '12.1'
+      parameters:
+        strategy:
+          class: classification.strategy.ProvenanceTrackingStrategy
+      parentNode: '12'
+    - class: step_producer.investigation_scoring.InvestigationScoringProducer
+      data: Completion Investigation Scoring
+      enable: '{{ENABLE_COMPLETION_INVESTIGATION_SCORING_PRODUCER}}'
+      extent: parent
+      id: '12.2'
+      parentNode: '12'
+    - class: step_producer.response_suggestion.ResponseSuggestionProducer
+      data: Completion Response Recommendation
+      enable: '{{ENABLE_COMPLETION_RESPONSE_PRODUCER}}'
+      extent: parent
+      id: '12.3'
+      parameters:
+        responders: '{{responders}}'
+        udi: '{{udi}}'
+      parentNode: '12'
+    thread_count: '8'
+  - data: Write Completed Results
+    enable: '{{ENABLE_WRITE_COMPLETED_RESULTS_PHASE}}'
+    extent: parent
+    id: '13'
+    pType: blocking
+    parentNode: pl-78
+    step_producers:
+    - class: step_producer.write_investigation_results.ExportInvestigationResultsProducer
+      data: Write Final Investigation Results
+      enable: '{{ENABLE_WRITE_FINAL_INVESTIGATION_RESULTS_PRODUCER}}'
+      extent: parent
+      id: '13.1'
+      parameters:
+        eliminate_dup_case_findings: '{{EXCLUDE_CASE_FINDINGS_DUPLICATES}}'
+        eliminate_dup_tis_event_symptoms: '{{ELIMINATE_DUPLICATE_SYMPTOMS}}'
+        include_case_findings: '{{INCLUDE_CASE_FINDINGS}}'
+        include_observables: '{{INCLUDE_OBSERVABLES}}'
+        include_process_tree: '{{EXTRACT_PROCESSES_ENABLED}}'
+        include_related_ti_events: '{{INCLUDE_RELATED_TI_EVENTS}}'
+        log: '{{LOG_INVESTIGATION_RESULTS}}'
+        max_events: '{{MAX_RESULT_EVENTS}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+        prefix: results
+      parentNode: '13'
+    - class: step_producer.write_investigation_results.ExportStatePickleProducer
+      data: Write Final State Pickle
+      enable: '{{ENABLE_WRITE_FINAL_STATE_PICKLE_PRODUCER}}'
+      extent: parent
+      id: '13.2'
+      parameters:
+        input_key: '{{INPUT_STATE_KEY}}'
+        log: '{{LOG_PICKLE}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+        prefix: FINAL
+        reinvestigation_api: '{{reinvestigation_api}}'
+      parentNode: '13'
+    - class: step_producer.write_investigation_results.ExportGraphGexfProducer
+      data: Write Final Graph Gexf
+      enable: '{{ENABLE_WRITE_FINAL_GRAPH_GEXF_PRODUCER}}'
+      extent: parent
+      id: '13.3'
+      parameters:
+        log: '{{LOG_GEXF}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+        prefix: FINAL
+      parentNode: '13'
+    - class: step_producer.write_investigation_results.ExportEngineStatistics
+      data: Write Final Engine Statistics
+      enable: '{{ENABLE_WRITE_FINAL_STATISTICS_PRODUCER}}'
+      extent: parent
+      id: '13.4'
+      parameters:
+        log: '{{LOG_STATISTICS}}'
+        minio: '{{minio_client}}'
+        out_dir: '{{OUT_DIR}}'
+        prefix: FINAL_STATISTICS
+      parentNode: '13'
+    thread_count: '4'
+  type: linear
