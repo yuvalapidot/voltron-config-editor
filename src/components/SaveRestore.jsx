@@ -55,11 +55,13 @@ const SaveRestore = (props) => {
         setViewport({ x, y, zoom });
         toast.success("Restored Successfully", {
           position: toast.POSITION.TOP_CENTER,
+          hideProgressBar: true,
           autoClose: 1000,
         });
       } else {
         toast.error("Restore Failed. Nothing in localStorage", {
           position: toast.POSITION.TOP_CENTER,
+          hideProgressBar: true,
           autoClose: 1000,
         });
       }
