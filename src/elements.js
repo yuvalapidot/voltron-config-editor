@@ -2,18 +2,40 @@ import { MarkerType } from "reactflow";
 
 const config = require("./config");
 
+export let yamlName = [];
+export let common = [];
+export let states = [];
 export let nodes = [];
 export let edges = [];
 export let nodesToBackend = []; // this version is nested and will be updated according to the ui changes
+export let updatedYaml = [];
 
-export  function setNodes(nestedNodes) {
+export function setName(nameFromBackend)
+{
+  yamlName = nameFromBackend;
+}
+
+export function setCommon(commonFromBackend)
+{
+  common = commonFromBackend;
+}
+
+export function setState(stateFromBackend)
+{
+  states = stateFromBackend;
+}
+
+export function setNodes(nestedNodes) 
+{
   nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
+  updatedYaml = nodesToBackend;
   nodes = calculatePosition(nestedNodes);
   console.log(nodes);
-  }
+}
 
 // Decorate edges in the UI
-export function setEdges(edgesFromBackend) {
+export function setEdges(edgesFromBackend) 
+{
   edges = edgesFromBackend;
   edges.map((edge) => {
     edge.markerEnd = {
@@ -27,11 +49,12 @@ export function setEdges(edgesFromBackend) {
 }
 
 // Position calculators for the objects based on the object amount etc. Flaten the data from the file
-export function calculatePosition(nestedNodes) {
+export function calculatePosition(nestedNodes) 
+{
   //======= varieables =========
   let nodesAccumulator = [];
 
-  //FOR PIPELINES:
+  // FOR PIPELINES:
   let horizonalPositionPipe = 0;
   let verticalPositionPipe = 0;
   let PIPELINE_HEIGHT = window.innerHeight * 2 * 0.85;
@@ -39,7 +62,7 @@ export function calculatePosition(nestedNodes) {
   let pipelineWidth = 0;
   let pipelineSpacer = 100;
 
-  //FOR PHASES:
+  // FOR PHASES:
   let PHASE_HEIGHT = 55 * (config.NumOfSP + 1) + 10;
   let phaseWidth = 200;
   let spacer = 300;
@@ -49,27 +72,29 @@ export function calculatePosition(nestedNodes) {
   let verticalPosition_identDown = verticalPosition - PHASE_HEIGHT;
   let phaseCounter = 1;
 
-  //FOR STEP PRODUCERS:
+  // FOR STEP PRODUCERS:
   let horizonalPositionInPhase = 25;
   let verticalPositionInPhase = 40;
   let spacerInPhase = 60;
 
-  //============================ Calculate the location in the UI of every step producer and its nodes + edges.
-  //============================ Convert information of every step producer and its nodes + edges from YAML to the UI objects.
+  // Calculate the location in the UI of every step producer and its nodes + edges.
+  // Convert information of every step producer and its nodes + edges from YAML to the UI objects.
 
   let createStepProducer = (step_producer) => {
+
     step_producer.stringType = "step_producer";
 
     step_producer.data = { label: step_producer.data };
-    step_producer.position = {
-      x: horizonalPositionInPhase,
-      y: verticalPositionInPhase,
-    };
-    step_producer["style"] = {
+
+    step_producer.position = { x: horizonalPositionInPhase, y: verticalPositionInPhase };
+
+    step_producer["style"] = 
+    {
       width: 150,
       height: 49,
       backgroundColor: "rgba(255, 255, 255, 0.6)",
     };
+
     step_producer["targetPosition"] = "left"; // Source - From where the edge is coming out
     step_producer["sourcePosition"] = "bottom"; // Target - To where the edge is heading
     // delete step_producer["type"];
@@ -77,22 +102,17 @@ export function calculatePosition(nestedNodes) {
     nodesAccumulator.push(step_producer);
   };
 
-  let getBorder = (phaseType) => {
-    // console.log(phaseType);
-    if (phaseType === "blocking") {
-      return "2px solid";
-    } else if (phaseType === "watchdog") {
-      return "2px dashed";
-    } else {
-      return "2px solid #949494";
-    }
-    // return "3px solid"
+  let getBorder = (phaseType) => 
+  {
+    if (phaseType === "blocking") { return "2px solid"; } 
+    else if (phaseType === "watchdog") { return "2px dashed"; } 
+    else { return "2px solid #949494"; }
   };
-  nestedNodes.forEach((pipeline) => {
+
+  nestedNodes.forEach((pipeline) => 
+  {
     // pipeline is a dict contins also the phases list
-    //let numberOfPhases = pipeline.phases.length(); // phases is a list phases dicts
-    // console.log("in pipeline");
-    let numberOfPhases = Object.keys(pipeline.phases).length;
+    let numberOfPhases = Object.keys(pipeline.phases).length; // phases is a list phases dicts
 
     pipeline.stringType = "pipeline";
 
@@ -100,35 +120,32 @@ export function calculatePosition(nestedNodes) {
     pipeline.position = { x: horizonalPositionPipe, y: verticalPositionPipe };
     pipeline.draggable = false;
 
-    // liniar case
-    if (pipeline.type === "linear") {
-      pipelineWidth =
-        numberOfPhases * phaseWidth +
-        (numberOfPhases - 1) * 100 +
-        paddingInPipe;
-      pipeline["style"] = {
+    // linear Case
+    if (pipeline.type === "linear") 
+    {
+      pipelineWidth = numberOfPhases * phaseWidth + (numberOfPhases - 1) * 100 + paddingInPipe;
+      pipeline["style"] = 
+      {
         backgroundColor: "rgba(207, 207, 207, 0.1)",
         width: pipelineWidth,
-        // width: h,
         height: PIPELINE_HEIGHT,
       };
       nodesAccumulator.push(pipeline);
 
-      pipeline.phases.forEach(
-        (
-          phase // phase is a dict
-        ) => {
-          // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
-          phase.name = phase.data;
+      pipeline.phases.forEach((phase) => 
+      {
+          // Add current phase to nodes list 
+          // (we need to add it before it's children for react flow functionality)
+          phase.data = { label: phase.data };
+          // phase.name = phase.data;
           phase.stringType = "phase";
-
-          phase.data = { label: phase.data + " - " + phase.pType };
           phase.position = { x: horizonalPosition, y: verticalPosition };
           horizonalPosition += spacer;
-          //defining the target and source positions
+
+          // defining the target and source positions
           phase["targetPosition"] = "left";
           phase["sourcePosition"] = "right";
-          let border = getBorder(phase.pType);
+          let border = getBorder(phase.type);
           phase["style"] = {
             backgroundColor: "rgba(255, 0, 0, 0.2)",
             width: 200,
@@ -139,144 +156,144 @@ export function calculatePosition(nestedNodes) {
           nodesAccumulator.push(phase);
 
           // add the children step-producers:
+          phase.producers.forEach(createStepProducer);
 
-          phase.step_producers.forEach(createStepProducer);
-
-          delete phase["step_producers"]; // delete the step producers from current phase (???)
+          delete phase["producers"]; // delete the step producers from current phase (???)
           horizonalPositionInPhase = 25;
           verticalPositionInPhase = 40;
         }
       );
-      // horizonalPosition += spacer;
       horizonalPosition = 100;
-      // verticalPosition = 0;
     }
+
     // loop case
-    else {
-      // let numberOfPhases = Object.keys(pipeline.phases).length;
+    if (pipeline.type === "loop") 
+    {
       let evenCase = numberOfPhases % 2 === 0;
+      let oddCase = numberOfPhases % 2 !== 0;
 
-      // if (evenCase){
-      //   pipeline["style"] = {
-      //   backgroundColor: "rgba(255, 0, 0, 0.2)",
-      //   width: (numberOfPhases/2)*200+400,
-      //   height: PIPELINE_HEIGHT,
-      // };
-      // }
+      pipeline.phases.forEach((phase) => 
+      {
+        if (evenCase) 
+        {
+          pipelineWidth = (numberOfPhases / 2) * phaseWidth + (numberOfPhases / 2 - 1) * 100 + paddingInPipe;
+          pipeline["style"] = 
+          {
+            backgroundColor: "rgba(207, 207, 207, 0.1)",
+            width: pipelineWidth,
+            height: PIPELINE_HEIGHT,
+          };
+          nodesAccumulator.push(pipeline);
 
-      pipeline.phases.forEach(
-        (
-          phase // phase is a dict
-        ) => {
-          if (evenCase) {
-            pipelineWidth =
-              (numberOfPhases / 2) * phaseWidth +
-              (numberOfPhases / 2 - 1) * 100 +
-              paddingInPipe;
-            pipeline["style"] = {
-              backgroundColor: "rgba(207, 207, 207, 0.1)",
-              width: pipelineWidth,
-              height: PIPELINE_HEIGHT,
-            };
-            nodesAccumulator.push(pipeline);
-
-            if (phaseCounter <= numberOfPhases / 2) {
-              phase.position = {
-                x: horizonalPosition,
-                y: verticalPosition_identDown,
-              };
-              horizonalPosition += spacer;
-            } else {
-              horizonalPosition -= spacer;
-              phase.position = {
-                x: horizonalPosition,
-                y: verticalPosition_identUp,
-              };
-            }
-
-            if (phaseCounter === 1) {
-              phase["sourcePosition"] = "right";
-              phase["targetPosition"] = "bottom";
-            } else if (phaseCounter === numberOfPhases / 2) {
-              phase["sourcePosition"] = "bottom";
-              phase["targetPosition"] = "left";
-            } else if (phaseCounter === numberOfPhases / 2 + 1) {
-              phase["sourcePosition"] = "left";
-              phase["targetPosition"] = "top";
-            } else if (phaseCounter === numberOfPhases) {
-              phase["sourcePosition"] = "top";
-              phase["targetPosition"] = "right";
-            } else if (phaseCounter < numberOfPhases / 2) {
-              // top line
-              phase["sourcePosition"] = "right";
-              phase["targetPosition"] = "left";
-            } else {
-              // bottom line
-              phase["sourcePosition"] = "left";
-              phase["targetPosition"] = "right";
-            }
-
-            phaseCounter += 1;
-          } else {
-            // odd case
-            pipelineWidth =
-              (numberOfPhases / 2 + 0.5) * phaseWidth +
-              (numberOfPhases / 2 - 0.5) * 100 +
-              paddingInPipe;
-            pipeline["style"] = {
-              backgroundColor: "rgba(207, 207, 207, 0.1)",
-              width: pipelineWidth,
-              height: PIPELINE_HEIGHT,
-            };
-            nodesAccumulator.push(pipeline);
-
-            if (phaseCounter < numberOfPhases / 2) {
-              phase.position = {
-                x: horizonalPosition,
-                y: verticalPosition_identDown,
-              };
-              horizonalPosition += spacer;
-            } else if (phaseCounter > Math.ceil(numberOfPhases / 2)) {
-              horizonalPosition -= spacer;
-              phase.position = {
-                x: horizonalPosition,
-                y: verticalPosition_identUp,
-              };
-            } else {
-              phase.position = {
-                x: horizonalPosition,
-                y: verticalPosition,
-              };
-              //horizonalPosition += spacer;
-            }
-            if (phaseCounter === 1) {
-              phase["sourcePosition"] = "right";
-              phase["targetPosition"] = "bottom";
-            } else if (phaseCounter < numberOfPhases / 2) {
-              // top line
-              phase["sourcePosition"] = "right";
-              phase["targetPosition"] = "left";
-            } else if (phaseCounter === Math.ceil(numberOfPhases / 2)) {
-              phase["sourcePosition"] = "bottom";
-              phase["targetPosition"] = "top";
-            } else if (phaseCounter === numberOfPhases) {
-              phase["sourcePosition"] = "top";
-              phase["targetPosition"] = "right";
-            } else {
-              // bottom line
-              phase["sourcePosition"] = "left";
-              phase["targetPosition"] = "right";
-            }
-
-            phaseCounter += 1;
+          if (phaseCounter <= numberOfPhases / 2) 
+          {
+            phase.position = { x: horizonalPosition, y: verticalPosition_identDown };
+            horizonalPosition += spacer;
+          } 
+          
+          else 
+          {
+            horizonalPosition -= spacer;
+            phase.position = { x: horizonalPosition, y: verticalPosition_identUp };
           }
 
-          // add current phase to nodes list (we need to add it befor it's children for react flow functionality):
+          if (phaseCounter === 1) 
+          {
+            phase["sourcePosition"] = "right";
+            phase["targetPosition"] = "bottom";
+          } 
+          
+          else if (phaseCounter === numberOfPhases / 2) 
+          {
+            phase["sourcePosition"] = "bottom";
+            phase["targetPosition"] = "left";
+          } 
+          
+          else if (phaseCounter === numberOfPhases / 2 + 1) 
+          {
+            phase["sourcePosition"] = "left";
+            phase["targetPosition"] = "top";
+          } 
+          
+          else if (phaseCounter === numberOfPhases) 
+          {
+            phase["sourcePosition"] = "top";
+            phase["targetPosition"] = "right";
+          } 
+          
+          else if (phaseCounter < numberOfPhases / 2) 
+          {
+            // top line
+            phase["sourcePosition"] = "right";
+            phase["targetPosition"] = "left";
+          } 
+          
+          else 
+          {
+            // bottom line
+            phase["sourcePosition"] = "left";
+            phase["targetPosition"] = "right";
+          }
+
+          phaseCounter += 1;
+        } 
+          
+        if (oddCase) 
+        {
+          pipelineWidth = (numberOfPhases / 2 + 0.5) * phaseWidth + (numberOfPhases / 2 - 0.5) * 100 + paddingInPipe;
+          pipeline["style"] = 
+          {
+            backgroundColor: "rgba(207, 207, 207, 0.1)",
+            width: pipelineWidth,
+            height: PIPELINE_HEIGHT,
+          };
+          nodesAccumulator.push(pipeline);
+
+          if (phaseCounter < numberOfPhases / 2) 
+          {
+            phase.position = { x: horizonalPosition, y: verticalPosition_identDown };
+            horizonalPosition += spacer;
+          } 
+            
+          else if (phaseCounter > Math.ceil(numberOfPhases / 2)) 
+          {
+            horizonalPosition -= spacer;
+            phase.position = { x: horizonalPosition, y: verticalPosition_identUp };
+          } 
+          
+          else 
+          {
+            phase.position = { x: horizonalPosition, y: verticalPosition };
+            //horizonalPosition += spacer;
+          }
+
+          if (phaseCounter === 1) 
+          {
+            phase["sourcePosition"] = "right";
+            phase["targetPosition"] = "bottom";
+          } else if (phaseCounter < numberOfPhases / 2) {
+            // top line
+            phase["sourcePosition"] = "right";
+            phase["targetPosition"] = "left";
+          } else if (phaseCounter === Math.ceil(numberOfPhases / 2)) {
+            phase["sourcePosition"] = "bottom";
+            phase["targetPosition"] = "top";
+          } else if (phaseCounter === numberOfPhases) {
+            phase["sourcePosition"] = "top";
+            phase["targetPosition"] = "right";
+          } else {
+            // bottom line
+            phase["sourcePosition"] = "left";
+            phase["targetPosition"] = "right";
+          }
+
+          phaseCounter += 1;
+        }
+
+          // add current phase to nodes list (we need to add it before it's children for react flow functionality):
           phase.name = phase.data;
           phase.stringType = "phase";
-
-          phase.data = { label: phase.data + " - " + phase.pType };
-          let border = getBorder(phase.pType);
+          let border = getBorder(phase.type);
           phase["style"] = {
             backgroundColor: "rgba(255, 0, 0, 0.2)",
             width: 200,
@@ -288,15 +305,13 @@ export function calculatePosition(nestedNodes) {
 
           // add the children step-producers:
 
-          phase.step_producers.forEach(createStepProducer);
+          phase.producers.forEach(createStepProducer);
 
-          delete phase["step_producers"]; // delete the step producers from current phase (???)
+          delete phase["producers"]; // delete the step producers from current phase (???)
           horizonalPositionInPhase = 25;
           verticalPositionInPhase = 40;
         }
       );
-      // horizonalPosition =
-      //   horizonalPosition + spacer * (numberOfPhases / 2) + spacer;
       horizonalPosition = 100;
       phaseCounter = 0;
     }

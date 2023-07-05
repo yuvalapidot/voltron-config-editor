@@ -4,6 +4,7 @@ import "./ViewPage.scss";
 import EditWindow from "./Edit/EditWindow";
 import ReactFlow, { useNodesState, useEdgesState, updateEdge, addEdge, useReactFlow } from "reactflow";
 import { nodes, edges } from "../../../elements";
+// import { NodesContext } from "../../nodesContext";
 
 
 
@@ -54,7 +55,7 @@ function ViewPage() {
           if (node.stringType === "phase") {
             node.data.label = changesToApply.data.label
             node.name = changesToApply.data.label
-            node.pType = changesToApply.pType;
+            node.type = changesToApply.type
             //node.selected = changesToApply.enable
             console.log(nodesWithState);
           }
@@ -71,7 +72,7 @@ function ViewPage() {
     }, [changesToApply]);
 
   return (
-    
+    // <NodesContext.Provider value={nodesWithState}>
     <div className="window-conteiner">
       {/* Apply changes to the clicked node */}
       <EditWindow
@@ -95,6 +96,7 @@ function ViewPage() {
         />
       </div>
     </div>
+    // </NodesContext.Provider>
   );
 }
 

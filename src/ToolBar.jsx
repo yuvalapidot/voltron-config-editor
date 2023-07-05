@@ -11,21 +11,23 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
-import { nodes, calculatePosition, setNodes, setEdges } from "./elements";
+import { yamlName, common, states, nodes, edges, setName, setCommon, setState, setNodes, setEdges, nodesToBackend, flatten } from "./elements";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { flatten } from "./elements";
-import { yamlToDict, createElements } from "./BackToFrontFunc";
+import { yamlToDict, createElements, transformData} from "./BackToFrontFunc";
 import yaml from "js-yaml";
+// import SaveButton from "./components/pages/ViewPage/Edit/Form/SaveButton";
+// import { NodesContext } from './components/nodesContext';
 
 const ToolBar = () => {
+  // const nodesWithState = React.useContext(NodesContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
-
+  
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
   };
-
+  
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -46,12 +48,19 @@ const ToolBar = () => {
           try {
             const initialDict = yamlToDict(reader.result); // parse YAML into JS object
             const elementDict = createElements(initialDict);
+            setName(elementDict.name);
+            setCommon(elementDict.common);
+            setState(elementDict.state);
             setNodes(elementDict.nodes);
             setEdges(elementDict.edges);
+            console.log('nodes', nodes);
+            console.log('edges', edges);
             navigate("/view");
             handleClose();
-          } catch (err) {
-            console.log("not working");
+          }
+          catch (err) 
+          {
+            console.log("not working")
             console.error(err);
             alert("Error parsing file");
           }
@@ -65,60 +74,15 @@ const ToolBar = () => {
   };  
 
   const saveHandler = () => {
-    // const fileContent = "---\n"; // This is the content of the YAML file
-
-    const config = {
-      pipeline: [
-        {
-          name: "Initialization",
-          type: "linear",
-          phases: [
-            {
-              name: "Ingestion",
-              type: "blocking",
-              producers: [
-                {
-                  class:
-                    "step_producer.reinvestigation.ReinvestigationStepProducer",
-                  name: "Reinvestigation",
-                  enable: "{{ENABLE_REINVESTIGATION}}",
-                  parameters: {
-                    reinvestigation_api: "{{reinvestigation_api}}",
-                    state_pickle: "{{STATE_PICKLE_FILE}}",
-                    input_key: "{{INPUT_STATE_KEY}}",
-                    exclude_keys: "{{STATE_EXCLUDE_KEYS}}",
-                  },
-                },
-                {
-                  class:
-                    "step_producer.investigation_input.InvestigationInputStepProducer",
-                  name: "Investigation Input",
-                  enable: "{{ENABLE_INGESTION_PRODUCER}}",
-                  parameters: {
-                    input_findings: "{{FINDINGS}}",
-                    input_observed_data: "{{OBSERVED_DATA}}",
-                    input_pattern: "{{STIX_PATTERN}}",
-                    udi: "{{udi}}",
-                    window_start: "{{start_ts}}",
-                    window_end: "{{stop_ts}}",
-                    max_trigger_events: "{{MAX_TRIGGER_EVENTS}}",
-                  },
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    }; // This is the configuration object to be converted to YAML
-
-    const yamlContent = yaml.dump(config); // Convert object to YAML
-    const fileName = "voltron.yaml"; // This is the name of the file
-
-    const element = document.createElement("a");
-    const file = new Blob([yamlContent], { type: "text/yaml" });
-    element.href = URL.createObjectURL(file);
-    element.download = fileName;
-    element.click();
+    // const yamlContent = yaml.dump(nodesWithState);
+    const newYamlContent = transformData(nodesToBackend, yamlName, common, states); // TODO: change nodesToBackend to 
+    const yamlContent = yaml.dump(newYamlContent);
+      const fileName = "voltron.yaml";
+      const element = document.createElement("a");
+      const file = new Blob([yamlContent], {type: 'text/yaml'});
+      element.href = URL.createObjectURL(file);
+      element.download = fileName;
+      element.click();
   };
 
   return (
