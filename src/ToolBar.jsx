@@ -11,15 +11,12 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
-import { yamlName, common, states, nodes, edges, setName, setCommon, setState, setNodes, setEdges, nodesToBackend, flatten } from "./elements";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { yamlName, common, states, nodes, edges, setName, setCommon, setState, setNodes, setEdges, nodesToBackend } from "./elements";
 import { yamlToDict, createElements, transformData} from "./BackToFrontFunc";
 import yaml from "js-yaml";
-// import SaveButton from "./components/pages/ViewPage/Edit/Form/SaveButton";
-// import { NodesContext } from './components/nodesContext';
 
-const ToolBar = () => {
+function ToolBar() 
+{
   // const nodesWithState = React.useContext(NodesContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
@@ -53,8 +50,6 @@ const ToolBar = () => {
             setState(elementDict.state);
             setNodes(elementDict.nodes);
             setEdges(elementDict.edges);
-            console.log('nodes', nodes);
-            console.log('edges', edges);
             navigate("/view");
             handleClose();
           }

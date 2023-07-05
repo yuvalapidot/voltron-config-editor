@@ -4,10 +4,6 @@ import "./ViewPage.scss";
 import EditWindow from "./Edit/EditWindow";
 import ReactFlow, { useNodesState, useEdgesState, updateEdge, addEdge, useReactFlow } from "reactflow";
 import { nodes, edges } from "../../../elements";
-// import { NodesContext } from "../../nodesContext";
-
-
-
 
 // ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
 function ViewPage() {
@@ -68,11 +64,9 @@ function ViewPage() {
         return node;
       })
       );
-      // console.log(nodesWithState);
     }, [changesToApply]);
 
   return (
-    // <NodesContext.Provider value={nodesWithState}>
     <div className="window-conteiner">
       {/* Apply changes to the clicked node */}
       <EditWindow
@@ -96,7 +90,6 @@ function ViewPage() {
         />
       </div>
     </div>
-    // </NodesContext.Provider>
   );
 }
 

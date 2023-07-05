@@ -3,7 +3,7 @@ import yaml from "js-yaml";
 // ID variables
 let pipelineId = 1; // Pipeline ID counter
 let phaseId = 1;    // Phase ID counter
-let spId = 1;     // Step producer ID counter
+let spId = 1;       // Step producer ID counter
 
 export function yamlToDict(data) 
 {
@@ -214,60 +214,3 @@ export function transformData(data, name, common, state) {
     })),
   };
 }
-
-// export function transformData(oldYaml) 
-// {
-//   // 1. Add in the beginning "name: Investigation".
-//   let transformedData = {
-//     name: "Investigation",
-//   };
-//   transformData.common = 
-
-//   // 2. Add "pipeline:" before investigations steps.
-//   transformedData.pipeline = oldYaml.map(pl => {
-
-//     // 3. Change key called "data" to "name"
-//     let transformedPl = { ...pl };
-//     transformedPl.name = transformedPl.data;
-//     delete transformedPl.data;
-
-//     transformedPl.phases = transformedPl.phases.map(phase => {
-//       let transformedPhase = { ...phase };
-
-//       // 3. Change key called "data" to "name"
-//       transformedPhase.name = transformedPhase.data;
-//       delete transformedPhase.data;
-
-//       transformedPhase.producers = transformedPhase.producers.map(producer => {
-//         let transformedProducer = { ...producer };
-
-//         // 3. Change key called "data" to "name"
-//         transformedProducer.name = transformedProducer.data;
-//         delete transformedProducer.data;
-
-//         // 4. Remove "parentNode" key
-//         delete transformedProducer.parentNode;
-
-//         // 5. Remove "id" key
-//         delete transformedProducer.id;
-
-//         return transformedProducer;
-//       });
-
-//       // 4. Remove "parentNode" key
-//       delete transformedPhase.parentNode;
-
-//       // 5. Remove "id" key
-//       delete transformedPhase.id;
-
-//       return transformedPhase;
-//     });
-
-//     // 5. Remove "id" key
-//     delete transformedPl.id;
-
-//     return transformedPl;
-//   });
-
-//   return transformedData;
-// }
