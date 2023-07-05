@@ -27,12 +27,12 @@ const types = [
 
 function PhaseForm(props) {
   const [phaseName, setPhaseName] = useState(props.nodeInfo.data.label);
-  const [phaseType, setPhaseType] = useState(props.nodeInfo.pType);
+  const [phaseType, setPhaseType] = useState(props.nodeInfo.type);
   const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
 
   useEffect(() => {
     setPhaseName(props.nodeInfo.data.label);
-    setPhaseType(props.nodeInfo.pType);
+    setPhaseType(props.nodeInfo.type);
     setEnable(props.nodeInfo.enable);
     console.log(props.nodeInfo);
   }, [props.nodeInfo]);
@@ -57,7 +57,7 @@ function PhaseForm(props) {
         ...props.nodeInfo.data,
         label: phaseName,
       },
-      pType: phaseType,
+      type: phaseType,
       selected: SPEnable,
     });
 
