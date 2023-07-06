@@ -1,11 +1,6 @@
 import React, { useState, useCallback, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import ReactFlow, {
-  ReactFlowProvider,
-  useReactFlow,
-  Controls,
-  ControlButton,
-} from "reactflow";
+import ReactFlow, { ReactFlowProvider, useReactFlow, Controls, ControlButton } from "reactflow";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import "reactflow/dist/style.css";
@@ -19,61 +14,59 @@ const SaveRestore = (props) => {
   const flowKey = "example-flow";
   const navigate = useNavigate();
 
-  //Save Function
+  // Save Function
   const onSave = useCallback(() => {
-    if (rfInstance) {
+    if (rfInstance) 
+    {
       const flow = rfInstance.toObject();
       localStorage.setItem(flowKey, JSON.stringify(flow));
       toast.success("Saved Successfully", {
         position: toast.POSITION.TOP_CENTER,
         autoClose: 5000,
       });
-    } else {
-      toast.error("Save Failed.", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 5000,
-      });
+    } 
+    else 
+    {
+      toast.error("Save Failed.", { position: toast.POSITION.TOP_CENTER, autoClose: 5000 });
     }
   }, [rfInstance]);
 
-  //Save Function without notifications for automatic changes
+  // Save Function without notifications for automatic changes
   const onSaveNoNotifications = useCallback(() => {
-    if (rfInstance) {
+    if (rfInstance) 
+    {
       const flow = rfInstance.toObject();
       localStorage.setItem(flowKey, JSON.stringify(flow));
     }
   }, [rfInstance]);
 
-  //Restore Function
+  // Restore Function
   const onRestore = useCallback(() => {
     const restoreFlow = async () => {
       const flow = JSON.parse(localStorage.getItem(flowKey));
-      if (flow) {
+      if (flow) 
+      {
         const { x = 0, y = 0, zoom = 1 } = flow.viewport;
         props.setNodes(flow.nodes || []);
         props.setEdges(flow.edges || []);
         setViewport({ x, y, zoom });
-        toast.success("Restored Successfully", {
-          position: toast.POSITION.TOP_CENTER,
-          hideProgressBar: true,
-          autoClose: 1000,
-        });
-      } else {
-        toast.error("Restore Failed. Nothing in localStorage", {
-          position: toast.POSITION.TOP_CENTER,
-          hideProgressBar: true,
-          autoClose: 1000,
-        });
+        toast.success("Restored Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
+      } 
+      else 
+      {
+        toast.error("Restore Failed. Nothing in localStorage", { position: toast.POSITION.TOP_CENTER, autoClose: 1000 });
       }
     };
 
     restoreFlow();
-  }, [props, setViewport]); //localStorage would be overwritten after fileupload
+  }, [props, setViewport]); // localStorage would be overwritten after fileupload
 
   useEffect(() => {
-    if ((props.edges).length === 0 && (props.nodes).length === 0){
+    if ((props.edges).length === 0 && (props.nodes).length === 0)
+    {
       return;
     }
+    
     // Execute the effect for other routes
     onSaveNoNotifications();
     return () => {
@@ -106,7 +99,7 @@ const SaveRestore = (props) => {
   );
 };
 
-//Use ReactFlowProvider as a wrapper to use other React Flow libraries
+// Use ReactFlowProvider as a wrapper to use other React Flow libraries
 function SaveRestoreWithProvider(props) {
   return (
     <ReactFlowProvider>
@@ -114,4 +107,5 @@ function SaveRestoreWithProvider(props) {
     </ReactFlowProvider>
   );
 }
+
 export default SaveRestoreWithProvider;

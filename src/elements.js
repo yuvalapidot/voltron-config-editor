@@ -97,7 +97,6 @@ export function calculatePosition(nestedNodes)
 
     step_producer["targetPosition"] = "left"; // Source - From where the edge is coming out
     step_producer["sourcePosition"] = "bottom"; // Target - To where the edge is heading
-    // delete step_producer["type"];
     verticalPositionInPhase += spacerInPhase;
     nodesAccumulator.push(step_producer);
   };
@@ -264,25 +263,36 @@ export function calculatePosition(nestedNodes)
           else 
           {
             phase.position = { x: horizonalPosition, y: verticalPosition };
-            //horizonalPosition += spacer;
           }
 
           if (phaseCounter === 1) 
           {
             phase["sourcePosition"] = "right";
             phase["targetPosition"] = "bottom";
-          } else if (phaseCounter < numberOfPhases / 2) {
-            // top line
+          } 
+          
+          // top line
+          else if (phaseCounter < numberOfPhases / 2) 
+          {
             phase["sourcePosition"] = "right";
             phase["targetPosition"] = "left";
-          } else if (phaseCounter === Math.ceil(numberOfPhases / 2)) {
+          } 
+          
+          else if (phaseCounter === Math.ceil(numberOfPhases / 2)) 
+          {
             phase["sourcePosition"] = "bottom";
             phase["targetPosition"] = "top";
-          } else if (phaseCounter === numberOfPhases) {
+          } 
+          
+          else if (phaseCounter === numberOfPhases) 
+          {
             phase["sourcePosition"] = "top";
             phase["targetPosition"] = "right";
-          } else {
-            // bottom line
+          } 
+          
+          // bottom line
+          else 
+          {
             phase["sourcePosition"] = "left";
             phase["targetPosition"] = "right";
           }
@@ -300,11 +310,9 @@ export function calculatePosition(nestedNodes)
             height: PHASE_HEIGHT,
             border: border,
           };
-          // delete phase["type"];
           nodesAccumulator.push(phase);
 
           // add the children step-producers:
-
           phase.producers.forEach(createStepProducer);
 
           delete phase["producers"]; // delete the step producers from current phase (???)
@@ -315,7 +323,6 @@ export function calculatePosition(nestedNodes)
       horizonalPosition = 100;
       phaseCounter = 0;
     }
-    //delete pipeline["type"];
     delete pipeline["phases"];
     horizonalPositionPipe += pipelineWidth + pipelineSpacer;
   });

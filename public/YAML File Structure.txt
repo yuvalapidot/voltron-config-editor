@@ -1,0 +1,38 @@
+========== File Hierarchy ==========
+
+pipeline:
+	- name
+	  type
+	  phases:
+		- name
+		  type
+		  enable (optional)
+		  thread_count (optional)
+		  producers:
+			- class
+			  name
+			  enable (optional)
+			  parameters (optional)
+			  run_after (optional)
+
+
+========== Types of Labels ==========
+
+pipeline:
+	- name: str
+	- type: [linear, loop]
+	- phases: list
+
+phases:
+	- name: str
+	- type: [blocking, non_blocking, watchdog]
+	- enable: str (optional)
+	- thread_count: int (optional)
+	- producers: list
+
+producers:
+	- class: str
+	- name: str
+	- enable: str (optional)
+	- parameters: list (optional)
+	- run_after: list (optional)

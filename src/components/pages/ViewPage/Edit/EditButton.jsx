@@ -6,14 +6,18 @@ import EditIcon from "@mui/icons-material/Edit";
 
 let editorIsClosed = true;
 
-function EditButton(props) {
+function EditButton(props) 
+{
   let [buttonText, setButtonText] = useState("Edit");
 
   let handleClick = () => {
-    if (editorIsClosed) {
+    if (editorIsClosed) 
+    {
       props.onClick(editorStyleOpen);
       setButtonText(<KeyboardDoubleArrowLeftIcon />);
-    } else {
+    } 
+    else 
+    {
       props.onClick(editorStyleClosed);
       setButtonText("Edit");
     }

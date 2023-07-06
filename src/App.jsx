@@ -13,7 +13,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (event) => {
-      //When you refresh the page with F5 - go back to home page since you cant upload a file if you are at /view
+      // When you refresh the page with F5 - go back to home page since you cant upload a file if you are at /view
       if (event.key === "F5") { 
         navigate("/");
         event.stopPropagation();
@@ -24,6 +24,7 @@ function App() {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [navigate]);
+
   return (
     <div className="App" style={{ height: "100%" }}>
       <ReactFlowProvider>
