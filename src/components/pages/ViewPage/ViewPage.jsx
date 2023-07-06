@@ -5,8 +5,12 @@ import EditWindow from "./Edit/EditWindow";
 import { useNodesState, useEdgesState, updateEdge, addEdge } from "reactflow";
 import { nodes, edges } from "../../../elements";
 
-// ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage - Flow and EditWindow will be rendered as well
-function ViewPage() {
+
+/** ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage:
+  * Flow and EditWindow will be rendered as well
+  */
+function ViewPage() 
+{
     // State 1 - nodesWithState: make the calculated nodes of elements (imported) into state
     const [nodesWithState, setNodes, onNodesChange] = useNodesState(nodes);
     
@@ -36,8 +40,10 @@ function ViewPage() {
   // When changes are made in Form - keep them updated in changesToApply and then in the UI to dispaly
   useEffect(() => {
     setNodes((nodesWithState) =>
-      nodesWithState.map((node) => {
-        if (node.id === changesToApply.id) {
+      nodesWithState.map((node) => 
+      {
+        if (node.id === changesToApply.id) 
+        {
           // it's important that you create a new object here
           // in order to notify react flow about the change
           //this new object responsible for editing the step producer
@@ -47,7 +53,8 @@ function ViewPage() {
           };
           node.class = changesToApply.class;
           node.parameters = changesToApply.parameters;
-          //check if its a phase
+
+          // check if its a phase
           if (node.stringType === "phase") {
             node.data.label = changesToApply.data.label
             node.name = changesToApply.data.label
@@ -55,7 +62,8 @@ function ViewPage() {
             //node.selected = changesToApply.enable
             console.log(nodesWithState);
           }
-          //check if its a pipline
+
+          // check if its a pipline
           if (node.stringType === "pipeline") {
             node.type = changesToApply.type;
           }

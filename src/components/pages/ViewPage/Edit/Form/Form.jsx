@@ -4,8 +4,8 @@ import PhaseForm from "./PhaseForm";
 import PipelineForm from "./PipelineForm";
 
 // 3 types of form: pipeline/step_producer/phase. Show the relevant in the form
-function Form(props) {
-  // console.log(props.nodeInfo.id);
+function Form(props) 
+{
   return (
     <div
       style={{

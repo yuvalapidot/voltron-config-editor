@@ -38,7 +38,7 @@ function Flow(props) {
   };
 
   return (
-    //using React.Fragment to create a wrapper for ReactFlow so we can use useReactFlow hook
+    // using React.Fragment to create a wrapper for ReactFlow so we can use useReactFlow hook
     <React.Fragment>
     <ReactFlow
       nodes={props.nodesWithState}
@@ -64,7 +64,6 @@ function Flow(props) {
         setNodes={props.setNodes}
         setEdges={(e) => props.setEdges(e)}
       />
-      {/* <Controls /> */}
     </ReactFlow>
     </React.Fragment>
   );

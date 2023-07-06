@@ -30,16 +30,17 @@ function ToolBar()
   };
 
   const uploadHandler = async () => {
-    // create a hidden file input element
-    const fileInput = document.createElement("input");
+    const fileInput = document.createElement("input"); // create a hidden file input element
     fileInput.type = "file";
     fileInput.accept = ".yaml, .json"; // set the allowed file type(s)
   
     // listen for the user to select a file
-    fileInput.addEventListener("change", async (e) => {
+    fileInput.addEventListener("change", async (e) => 
+    {
       const file = e.target.files[0];
-  
-      if (file != null) {
+
+      if (file != null) 
+      {
         const reader = new FileReader();
         reader.onload = () => {
           try {
