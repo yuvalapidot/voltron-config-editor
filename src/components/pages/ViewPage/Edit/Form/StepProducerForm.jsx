@@ -1,24 +1,12 @@
 import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  InputLabel,
-  FormControl,
-  Input,
-  TextField,
-  Box,
-  Button,
-  MenuItem,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  FormLabel
-} from "@mui/material";
+import { Grid, InputLabel, FormControl, Input, TextField, Box, Button, MenuItem, Radio, RadioGroup, FormControlLabel, FormLabel } from "@mui/material";
 import config from "../../../../../config";
 import styles from "./Form.module.scss";
 
 const classes = config.SPClasses;
 
-function StepProducerForm(props) {
+function StepProducerForm(props) 
+{
   const [SPName, setSPName] = useState(props.nodeInfo.data.label);
   const [SPClass, setClass] = useState(props.nodeInfo.class.substring(14));
   const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
@@ -27,7 +15,7 @@ function StepProducerForm(props) {
   //const [state, setState] = useState(props.nodeInfo.parameters);
 
   useEffect(() => {
-    console.log("updated step_producer", props.nodeInfo)
+    console.log("updated step_producer", props.nodeInfo);
     setSPName(props.nodeInfo.data.label);
     setClass(props.nodeInfo.class.substring(14));
     setEnable(props.nodeInfo.enable);

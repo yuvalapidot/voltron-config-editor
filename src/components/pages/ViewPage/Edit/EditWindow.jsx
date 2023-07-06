@@ -4,7 +4,8 @@ import { useState } from "react";
 import EditButton from "./EditButton";
 import Form from "./Form/Form";
 
-function EditWindow(props) {
+function EditWindow(props) 
+{
   let [editorStyle, setEditorStyle] = useState(editorStyleClosed);
 
   return (

@@ -11,14 +11,14 @@ import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
-import { yamlName, common, states, nodes, edges, setName, setCommon, setState, setNodes, setEdges, nodesToBackend } from "./elements";
-import { yamlToDict, createElements, transformData} from "./BackToFrontFunc";
+import { yamlName, common, states, setName, setCommon, setState, setNodes, setEdges } from "./elements";
+import { yamlToDict, createElements, transformData } from "./BackToFrontFunc";
 import yaml from "js-yaml";
 
 function ToolBar() 
 {
-  // const nodesWithState = React.useContext(NodesContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const flowKey = "example-flow";
   const navigate = useNavigate();
   
   const handleMenu = (event) => {
@@ -66,18 +66,18 @@ function ToolBar()
   
     // simulate a click on the file input element to display the file input dialog
     fileInput.click();
-  };  
+  };
 
   const saveHandler = () => {
-    // const yamlContent = yaml.dump(nodesWithState);
-    const newYamlContent = transformData(nodesToBackend, yamlName, common, states); // TODO: change nodesToBackend to 
+    const newData = JSON.parse(localStorage.getItem(flowKey));
+    const newYamlContent = transformData(newData.nodes, yamlName, common, states);
     const yamlContent = yaml.dump(newYamlContent);
-      const fileName = "voltron.yaml";
-      const element = document.createElement("a");
-      const file = new Blob([yamlContent], {type: 'text/yaml'});
-      element.href = URL.createObjectURL(file);
-      element.download = fileName;
-      element.click();
+    const fileName = "voltron.yaml";
+    const element = document.createElement("a");
+    const file = new Blob([yamlContent], {type: 'text/yaml'});
+    element.href = URL.createObjectURL(file);
+    element.download = fileName;
+    element.click();
   };
 
   return (

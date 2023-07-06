@@ -1,0 +1,34 @@
+C:.
+│   App.jsx
+│   App.scss
+│   BackToFrontFunc.js
+│   config.js
+│   elements.js
+│   index.css
+│   index.js
+│   ToolBar.jsx
+│   
+├───assets
+│       investigation-engine.yaml
+│       
+└───components
+    └───pages
+        ├───FirstPage
+        │       FirstPage.jsx
+        │       FirstPage.scss
+        │       
+        └───ViewPage
+            │   Flow.jsx
+            │   ViewPage.jsx
+            │   ViewPage.scss
+            │   
+            └───Edit
+                │   EditButton.jsx
+                │   EditWindow.jsx
+                │   
+                └───Form
+                        Form.jsx
+                        PhaseForm.jsx
+                        PipelineForm.jsx
+                        SaveButton.jsx
+                        StepProducerForm.jsx

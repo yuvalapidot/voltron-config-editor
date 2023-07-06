@@ -187,30 +187,38 @@ function createInnerEdges(source, target)
     return newInnerEdge;
 }
 
-export function transformData(data, name, common, state) {
+export function transformData(data, name, common, state) 
+{
+  const pipelines = data.filter(item => item.stringType === 'pipeline');
+  
   return {
     name: '' + name,
     common: common,
     state: state,
-    pipeline: data.map(({ id, data, type, phases, ...pipelineRest }) => ({
-      name: data,
-      type: type,
-      phases: phases.map(({ id, parentNode, data, type, enable, thread_count, producers, ...phaseRest }) => ({
-        name: data,
-        type: type,
-        enable: enable,
-        thread_count: thread_count,
-        producers: producers.map(({ id, parentNode, data, prodClass, enable, parameters, run_after, ...producerRest }) => ({
-          name: data,
-          class: prodClass,
-          enable: enable,
-          parameters: parameters,
-          run_after: run_after,
-          ...producerRest
-        })),
-        ...phaseRest
-      })),
-      ...pipelineRest
-    })),
+    pipeline: pipelines.map(pipeline => {
+      const phases = data.filter(item => item.stringType === 'phase' && item.parentNode === pipeline.id);
+      return {
+        name: pipeline.data.label,
+        type: pipeline.type,
+        phases: phases.map(phase => {
+          const producers = data.filter(item => item.stringType === 'step_producer' && item.parentNode === phase.id);
+          return {
+            name: phase.data.label || phase.data,
+            type: phase.type,
+            ...(phase.enable !== undefined && { enable: phase.enable }),
+            ...(phase.thread_count !== undefined && { thread_count: phase.thread_count }),
+            producers: producers.map(producer => {
+              return {
+                class: producer.class,
+                name: producer.data.label,
+                ...(producer.enable !== undefined && { enable: producer.enable }),
+                ...(producer.parameters !== undefined && { parameters: producer.parameters }),
+                ...(producer.run_after !== undefined && { run_after: producer.run_after })
+              }
+            })
+          }
+        })
+      }
+    })
   };
 }
