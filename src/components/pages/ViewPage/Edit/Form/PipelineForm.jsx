@@ -33,7 +33,7 @@ function PipelineForm(props) {
     setPiplineType(event.target.value);
   };
 
-  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
+  // handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
@@ -43,7 +43,6 @@ function PipelineForm(props) {
       },
       type: piplineType,
     });
-    console.log("clicked apply changes", props.nodeInfo)
   };
 
   return (

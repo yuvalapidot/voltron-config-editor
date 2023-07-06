@@ -20,10 +20,7 @@ const SaveRestore = (props) => {
     {
       const flow = rfInstance.toObject();
       localStorage.setItem(flowKey, JSON.stringify(flow));
-      toast.success("Saved Successfully", {
-        position: toast.POSITION.TOP_CENTER,
-        autoClose: 5000,
-      });
+      toast.success("Saved Successfully", { position: toast.POSITION.TOP_CENTER, autoClose: 5000, });
     } 
     else 
     {

@@ -7,36 +7,33 @@ const classes = config.SPClasses;
 
 function StepProducerForm(props) 
 {
-  const [SPName, setSPName] = useState(props.nodeInfo.data.label);
-  const [SPClass, setClass] = useState(props.nodeInfo.class.substring(14));
-  const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
-  const [SPParams, setParams] = useState(props.nodeInfo.parameters);
-  // const [SPParams, setParams] = useState(props.nodeInfo.parameters);
-  //const [state, setState] = useState(props.nodeInfo.parameters);
+  const [producerName, setProducerName] = useState(props.nodeInfo.data.label);
+  const [producerClass, setProducerClass] = useState(props.nodeInfo.class.substring(14));
+  const [producerEnable, setProducerEnable] = useState(props.nodeInfo.enable);
+  const [producerParameters, setProducerParameters] = useState(props.nodeInfo.parameters);
 
   useEffect(() => {
-    console.log("updated step_producer", props.nodeInfo);
-    setSPName(props.nodeInfo.data.label);
-    setClass(props.nodeInfo.class.substring(14));
-    setEnable(props.nodeInfo.enable);
-    setParams(props.nodeInfo.parameters);
+    setProducerName(props.nodeInfo.data.label);
+    setProducerClass(props.nodeInfo.class.substring(14));
+    setProducerEnable(props.nodeInfo.enable);
+    setProducerParameters(props.nodeInfo.parameters);
   }, [props.nodeInfo]);
 
   const handleSPNameChange = (event) => {
-    setSPName(event.target.value);
+    setProducerName(event.target.value);
   };
 
   const handleClassChange = (event) => {
-    setClass(event.target.value);
+    setProducerClass(event.target.value);
   };
 
   const handleEnableChange = (event) => {
-    setEnable(event.target.value);
+    setProducerEnable(event.target.value);
   };
 
   const handleParamsChange = (event, key, isKey) => {
     // First, we create a copy of the SPParams state
-    let paramsCopy = { ...SPParams };
+    let paramsCopy = { ...producerParameters };
     console.log(paramsCopy[key]);
     // If isKey is true, then we're updating a key. 
     //To do this, we need to create a new key-value pair and delete the old one
@@ -48,17 +45,20 @@ function StepProducerForm(props)
     else {
       paramsCopy[key] = event.target.value;
     }
-    setParams(paramsCopy);
+    setProducerParameters(paramsCopy);
   };
 
-  //handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
+  // handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
   let handleClick = () => {
     props.setChangesToApply({
       ...props.nodeInfo,
-      data: { ...props.nodeInfo.data, label: SPName }, // ... = {example: "1", {example2: "2"}} -> {example: "1",example2: "2"} as Json
-      class: "step_producer." + SPClass,
-      parameters: SPParams,
-      // enable: SPEnable,
+      data: { 
+        ...props.nodeInfo.data, 
+        label: producerName 
+      }, // ... = {example: "1", {example2: "2"}} -> {example: "1",example2: "2"} as Json
+      class: "step_producer." + producerClass,
+      parameters: producerParameters,
+      // enable: ProducerEnable,
     });
   };
 
@@ -81,7 +81,7 @@ function StepProducerForm(props)
             <TextField
               id="sp-name"
               label="Name:"
-              value={SPName}
+              value={producerName}
               margin="normal"
               onChange={handleSPNameChange}
             ></TextField>
@@ -91,7 +91,7 @@ function StepProducerForm(props)
               id="outlined-basic"
               label="Class:"
               select
-              value={SPClass}
+              value={producerClass}
               margin="normal"
               variant="outlined"
               onChange={handleClassChange}>
@@ -111,7 +111,7 @@ function StepProducerForm(props)
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
-                // value={SPEnable}
+                // value={ProducerEnable}
                 defaultValue="true"
                 onChange={handleEnableChange}>
                 <FormControlLabel
@@ -140,7 +140,7 @@ function StepProducerForm(props)
             item xs={10}
             spacing={1}>
             {props.nodeInfo.parameters &&
-              Object.entries(SPParams).map(([key, value]) => (
+              Object.entries(producerParameters).map(([key, value]) => (
                 <React.Fragment key={key}>
                   <Grid item xs={10}>
                     <FormControl
@@ -193,7 +193,7 @@ export let dynamicInputStyle = (input, isKey) => {
       marginTop: "5px",
       width: width,
     };
-  };//else
-}//dynamicInputStyle
+  };  // else
+} // dynamicInputStyle
 
 export default StepProducerForm;

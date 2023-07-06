@@ -25,16 +25,16 @@ const types = [
   },
 ];
 
-function PhaseForm(props) {
+function PhaseForm(props) 
+{
   const [phaseName, setPhaseName] = useState(props.nodeInfo.data.label);
   const [phaseType, setPhaseType] = useState(props.nodeInfo.type);
-  const [SPEnable, setEnable] = useState(props.nodeInfo.enable);
+  const [phaseEnable, setPhaseEnable] = useState(props.nodeInfo.enable);
 
   useEffect(() => {
     setPhaseName(props.nodeInfo.data.label);
     setPhaseType(props.nodeInfo.type);
-    setEnable(props.nodeInfo.enable);
-    console.log(props.nodeInfo);
+    setPhaseEnable(props.nodeInfo.enable);
   }, [props.nodeInfo]);
 
   const handlePhaseNameChange = (event) => {
@@ -46,7 +46,7 @@ function PhaseForm(props) {
   };
 
   const handleEnableChange = (event) => {
-    setEnable(event.target.value);
+    setPhaseEnable(event.target.value);
   };
 
   // handle click event - when push apply changes button will send the updated edit up the component tree to viewpage
@@ -58,9 +58,8 @@ function PhaseForm(props) {
         label: phaseName,
       },
       type: phaseType,
-      selected: SPEnable,
+      selected: phaseEnable,
     });
-
   };
 
   return (

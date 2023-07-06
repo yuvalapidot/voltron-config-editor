@@ -7,8 +7,7 @@ export let common = [];
 export let states = [];
 export let nodes = [];
 export let edges = [];
-export let nodesToBackend = []; // this version is nested and will be updated according to the ui changes
-export let updatedYaml = [];
+export let nodesToBackend = [];
 
 export function setName(nameFromBackend)
 {
@@ -28,9 +27,7 @@ export function setState(stateFromBackend)
 export function setNodes(nestedNodes) 
 {
   nodesToBackend = JSON.parse(JSON.stringify(nestedNodes));
-  updatedYaml = nodesToBackend;
   nodes = calculatePosition(nestedNodes);
-  console.log(nodes);
 }
 
 // Decorate edges in the UI
@@ -79,22 +76,12 @@ export function calculatePosition(nestedNodes)
 
   // Calculate the location in the UI of every step producer and its nodes + edges.
   // Convert information of every step producer and its nodes + edges from YAML to the UI objects.
-
-  let createStepProducer = (step_producer) => {
-
+  let createStepProducer = (step_producer) => 
+  {
     step_producer.stringType = "step_producer";
-
     step_producer.data = { label: step_producer.data };
-
     step_producer.position = { x: horizonalPositionInPhase, y: verticalPositionInPhase };
-
-    step_producer["style"] = 
-    {
-      width: 150,
-      height: 49,
-      backgroundColor: "rgba(255, 255, 255, 0.6)",
-    };
-
+    step_producer["style"] = { width: 150, height: 49, backgroundColor: "rgba(255, 255, 255, 0.6)" };
     step_producer["targetPosition"] = "left"; // Source - From where the edge is coming out
     step_producer["sourcePosition"] = "bottom"; // Target - To where the edge is heading
     verticalPositionInPhase += spacerInPhase;
@@ -114,7 +101,6 @@ export function calculatePosition(nestedNodes)
     let numberOfPhases = Object.keys(pipeline.phases).length; // phases is a list phases dicts
 
     pipeline.stringType = "pipeline";
-
     pipeline.data = { label: pipeline.data };
     pipeline.position = { x: horizonalPositionPipe, y: verticalPositionPipe };
     pipeline.draggable = false;
@@ -136,7 +122,6 @@ export function calculatePosition(nestedNodes)
           // Add current phase to nodes list 
           // (we need to add it before it's children for react flow functionality)
           phase.data = { label: phase.data };
-          // phase.name = phase.data;
           phase.stringType = "phase";
           phase.position = { x: horizonalPosition, y: verticalPosition };
           horizonalPosition += spacer;
@@ -145,19 +130,15 @@ export function calculatePosition(nestedNodes)
           phase["targetPosition"] = "left";
           phase["sourcePosition"] = "right";
           let border = getBorder(phase.type);
-          phase["style"] = {
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            width: 200,
-            height: PHASE_HEIGHT,
-            border: border,
-          };
-          // delete phase["type"];
+          phase["style"] = { width: 200, height: PHASE_HEIGHT, border: border, backgroundColor: "rgba(255, 0, 0, 0.2)" };
           nodesAccumulator.push(phase);
 
           // add the children step-producers:
           phase.producers.forEach(createStepProducer);
 
-          delete phase["producers"]; // delete the step producers from current phase (???)
+          // delete the step producers from current phase
+          delete phase["producers"];
+
           horizonalPositionInPhase = 25;
           verticalPositionInPhase = 40;
         }
@@ -176,12 +157,7 @@ export function calculatePosition(nestedNodes)
         if (evenCase) 
         {
           pipelineWidth = (numberOfPhases / 2) * phaseWidth + (numberOfPhases / 2 - 1) * 100 + paddingInPipe;
-          pipeline["style"] = 
-          {
-            backgroundColor: "rgba(207, 207, 207, 0.1)",
-            width: pipelineWidth,
-            height: PIPELINE_HEIGHT,
-          };
+          pipeline["style"] = { width: pipelineWidth, height: PIPELINE_HEIGHT, backgroundColor: "rgba(207, 207, 207, 0.1)" };
           nodesAccumulator.push(pipeline);
 
           if (phaseCounter <= numberOfPhases / 2) 
@@ -220,16 +196,16 @@ export function calculatePosition(nestedNodes)
             phase["targetPosition"] = "right";
           } 
           
+          // top line
           else if (phaseCounter < numberOfPhases / 2) 
           {
-            // top line
             phase["sourcePosition"] = "right";
             phase["targetPosition"] = "left";
           } 
           
+          // bottom line
           else 
           {
-            // bottom line
             phase["sourcePosition"] = "left";
             phase["targetPosition"] = "right";
           }
@@ -300,22 +276,20 @@ export function calculatePosition(nestedNodes)
           phaseCounter += 1;
         }
 
-          // add current phase to nodes list (we need to add it before it's children for react flow functionality):
-          phase.name = phase.data;
+          // add current phase to nodes list
+          // (we need to add it before it's children for react flow functionality):
           phase.stringType = "phase";
+          phase.data = { label: phase.data };
           let border = getBorder(phase.type);
-          phase["style"] = {
-            backgroundColor: "rgba(255, 0, 0, 0.2)",
-            width: 200,
-            height: PHASE_HEIGHT,
-            border: border,
-          };
+          phase["style"] = { width: 200, height: PHASE_HEIGHT, border: border, backgroundColor: "rgba(255, 0, 0, 0.2)" };
           nodesAccumulator.push(phase);
 
           // add the children step-producers:
           phase.producers.forEach(createStepProducer);
 
-          delete phase["producers"]; // delete the step producers from current phase (???)
+          // delete the step producers from current phase
+          delete phase["producers"];
+
           horizonalPositionInPhase = 25;
           verticalPositionInPhase = 40;
         }
