@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Flow from "./Flow";
+import Flow from "../../Flow";
 import "./ViewPage.scss";
 import EditWindow from "./Edit/EditWindow";
 import { useNodesState, useEdgesState, updateEdge, addEdge } from "reactflow";
-import { nodes, edges } from "../../../elements";
+import { nodes, edges } from "../../../configFunctions/elements";
 
 
 /** ViewPage is the parent of Flow and EditWindow so if we change the state of ViewPage:

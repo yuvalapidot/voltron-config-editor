@@ -6,16 +6,16 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
-import logo from "./assets/output-onlinepngtools.png";
+import logo from "../assets/output-onlinepngtools.png";
 import { Button } from "@mui/material";
 import SaveIcon from "@mui/icons-material/Save";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import { useNavigate } from "react-router-dom";
-import { yamlName, common, states, setName, setCommon, setState, setNodes, setEdges } from "./elements";
-import { yamlToDict, createElements, transformData } from "./BackToFrontFunc";
+import { yamlName, common, states, setName, setCommon, setState, setNodes, setEdges } from "../configFunctions/elements";
+import { yamlToDict, createElements, transformData } from "../configFunctions/BackToFrontFunc";
 import yaml from "js-yaml";
 
-function ToolBar() 
+function ToolBar(props) 
 {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const flowKey = "example-flow";
@@ -82,7 +82,8 @@ function ToolBar()
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
+
+    <Box sx={{ flexGrow: 1,  width: '100%'}}>
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

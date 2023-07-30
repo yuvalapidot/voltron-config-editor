@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import ReactFlow, { Background, MiniMap, useReactFlow } from "reactflow";
 import "reactflow/dist/style.css";
-import SaveRestore from "../../SaveRestore";
+import SaveRestore from "./SaveRestore";
 
 function Flow(props) {
   const [flowTransform, setFlowTransform] = useState({ x: 0, y: 0, zoom: 1 });
