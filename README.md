@@ -1,33 +1,30 @@
 # Voltron-config-editor Project Readme
-This application runs a frontend built with React. The following is a guide on how to run this application and an overview of the core JavaScript and React concepts necessary to understand and work on this project.
+This application runs a frontend built with React. The following is a guide on how to run this application and an overview of the core JavaScript and React concepts necessary to understand and work on this project
 
-Running the application
-
-Install npm:
-
-You will need to install npm (Node Package Manager). You can download it from here.
+You will need to install npm (Node Package Manager) and nodeJS.
 
 ## Install project dependencies:
 
 Open your terminal, navigate to the project directory (...\starship), and run the following command to install the necessary dependencies:
 
-Copy code
-npm install
-Start the application:
+1. Copy code
+2. npm install
 
+## Start the application:
 After the dependencies have been installed, run the following command to start the application:
 
-npm start
+3. npm start
 
 ## Core Concepts
 Before diving into the project, it is recommended that you familiarize yourself with some core concepts of JavaScript and React.
 
 ## JavaScript Core Concepts
+
 ### Immutability vs Mutability
 Understanding how and when to apply these principles in JavaScript can significantly influence the performance and manageability of your code.
 
 ### JavaScript Objects
-Objects are key-value stores which are widely used in JavaScript. Mastery of objects is crucial in manipulating data and structuring your code.
+Objects are key-value stores that are widely used in JavaScript. Mastery of objects is crucial in manipulating data and structuring your code.
 
 ### Lists and Map Method
 Knowledge of arrays and how to utilize the map method will greatly assist in handling data and generating elements in React.
