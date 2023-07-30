@@ -36,7 +36,7 @@ Knowledge of arrays and how to utilize the map method will greatly assist in han
 ### React Components
 These are the building blocks of any React application. They help in creating custom and reusable HTML elements.
 
-###React Component Lifecycle and Rendering
+### React Component Lifecycle and Rendering
 Learn about the various lifecycle methods and when React decides to re-render components.
 
 ### The Virtual DOM 
