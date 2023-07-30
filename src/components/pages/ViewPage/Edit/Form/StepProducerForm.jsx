@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Grid, InputLabel, FormControl, Input, TextField, Box, Button, MenuItem, Radio, RadioGroup, FormControlLabel, FormLabel } from "@mui/material";
-import config from "../../../../../config";
+import config from "../../../../../configFunctions/config";
 import styles from "./Form.module.scss";
 
 const classes = config.SPClasses;
@@ -58,20 +58,9 @@ function StepProducerForm(props)
       }, // ... = {example: "1", {example2: "2"}} -> {example: "1",example2: "2"} as Json
       class: "step_producer." + producerClass,
       parameters: producerParameters,
-      // enable: ProducerEnable,
+      // enable: ProducerEnable, // need to add it as boolean value when it will be connected to the real config engine values
     });
   };
-
-  // const handleChange = (e, i) => {
-  //   const { value, name } = e.target;
-  //   const newState = [...state];
-  //   newState[i] = {
-  //     ...newState[i],
-  //     [name]: value,
-  //   };
-  //   // console.log(newState);
-  //   setState(newState);
-  // };
 
   return (
     <div className={styles['edit-window-form']}>
@@ -111,7 +100,7 @@ function StepProducerForm(props)
                 row
                 aria-labelledby="demo-controlled-radio-buttons-group"
                 name="controlled-radio-buttons-group"
-                // value={ProducerEnable}
+                // value={ProducerEnable}// same here would be available with true config engine value
                 defaultValue="true"
                 onChange={handleEnableChange}>
                 <FormControlLabel
@@ -179,6 +168,7 @@ function StepProducerForm(props)
   );
 }
 
+// respnose for the input bars style, padding and length
 export let dynamicInputStyle = (input, isKey) => {
   let width = `${Math.max(input.length*1.3, 12)}ch`;
   if (isKey === false) {

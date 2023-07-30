@@ -4,17 +4,6 @@
   box-sizing: border-box;
 }
 
-body {
-  margin: 0;
-  font-family: 'Open-Sans',sans-serif;
-  color: #343a4a;
-  display: flex;
-  justify-content: space-evenly;
-  min-height: 100vh;
-  width: 100%;
-  background-color:rgb(243, 243, 243);
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
