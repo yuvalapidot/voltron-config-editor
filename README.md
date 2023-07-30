@@ -7,7 +7,7 @@ You will need to install npm (Node Package Manager) and nodeJS.
 
 Open your terminal, navigate to the project directory (...\starship), and run the following command to install the necessary dependencies:
 
-1. Copy code - git clone 
+1. Copy code - git clone https://github.com/yuvalapidot/voltron-config-editor.git
 2. npm install
 
 ## Start the application:
